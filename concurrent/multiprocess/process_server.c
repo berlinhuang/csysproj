@@ -3,6 +3,17 @@
 //
 
 //多进程并发服务器
+/**
+#include <arpa/inet.h>
+
+int inet_pton(int af, const char *src, void *dst);
+
+const char *inet_ntop(int af, const void *src, char *dst, socklen_t size);
+
+支持IPv4和IPv6
+可重入函数
+ */
+
 #include <ctype.h>
 #include <stdio.h>
 #include <unistd.h>

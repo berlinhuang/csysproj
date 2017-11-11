@@ -3,6 +3,40 @@
 //
 
 /* server.c */
+
+/**
+#include <poll.h>
+int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+
+struct pollfd {
+    int fd;         // 文件描述符
+    short events;   // 监控的事件
+    short revents;  // 监控事件中满足条件返回的事件
+};
+        POLLIN普通或带外优先数据可读,即POLLRDNORM | POLLRDBAND
+        POLLRDNORM-数据可读
+        POLLRDBAND-优先级带数据可读
+        POLLPRI 高优先级可读数据
+
+        POLLOUT普通或带外数据可写
+        POLLWRNORM-数据可写
+        POLLWRBAND-优先级带数据可写
+
+        POLLERR 发生错误
+        POLLHUP 发生挂起
+        POLLNVAL 描述字不是一个打开的文件
+
+nfds 监控数组中有多少文件描述符需要被监控
+
+timeout 毫秒级等待
+
+-1：阻塞等，#define INFTIM -1 Linux中没有定义此宏
+0：立即返回，不阻塞进程
+>0：等待指定毫秒数，如当前系统时间精度不够毫秒，向上取值
+ */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +49,7 @@
 #define MAXLINE 80
 #define SERV_PORT 8000
 #define OPEN_MAX 1024
+
 int main(int argc, char *argv[])
 {
     int i, j, maxi, listenfd, connfd, sockfd;
@@ -24,16 +59,16 @@ int main(int argc, char *argv[])
     socklen_t clilen;
     struct pollfd client[OPEN_MAX];
     struct sockaddr_in cliaddr, servaddr;
-    listenfd = Socket(AF_INET, SOCK_STREAM, 0);//创建接口
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);//创建接口                                                          socket
 
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(SERV_PORT);
 
-    Bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));//绑定
+    Bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));//绑定                                          bind
 
-    Listen(listenfd, 20);//监听
+    Listen(listenfd, 20);//监听                                                                                    listen
 
     client[0].fd = listenfd;//文件描述符 用于接受连接
     client[0].events = POLLRDNORM;//listenfd上等待发生的事 （POLLRDNORM 有普通数据可读） 或者改成POLLIN
@@ -45,15 +80,14 @@ int main(int argc, char *argv[])
     maxi = 0;//client[]数组有效元素中最大元素下标
 
     for ( ; ; ) {//默认语句2为真
-        nready = poll(client, maxi+1, -1);// 阻塞  获取可用文件描述符的个数  client的数组首地址 监控maxi+1个文件描述符，出错返回-1
+        // 阻塞( 没有数据不会执行后面的语句)  获取可用文件描述符的个数  client的数组首地址 监控maxi+1个文件描述符，出错返回-1
+        nready = poll(client, maxi+1, -1);
 
         if (client[0].revents & POLLRDNORM) //revents为传出参数， 有客户端链接请求
         {
             clilen = sizeof(cliaddr);//编译的时候就计算了
-            connfd = Accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);//接收连接
-            printf("received from %s at PORT %d\n",
-                   inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)),
-                   ntohs(cliaddr.sin_port));
+            connfd = Accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);//接收连接                              Accept
+            printf("received from %s at PORT %d\n", inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)), ntohs(cliaddr.sin_port));
             for (i = 1; i < OPEN_MAX; i++)
             {
                 if (client[i].fd < 0)
