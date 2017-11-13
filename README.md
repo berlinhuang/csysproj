@@ -1,18 +1,18 @@
 # csysproj
 
-## concurrent 
+## concurrent (处理并发的模型)
 
-- multiprocess
-
-- multithread
-
-- multiplexing
+- multiprocess (多进程处理并发)
+    > pid = fork()
+- multithread (多线程处理并发)
+    > pthread_create()
+- multiplexing (I/O多路复用处理并发)
 
     1. select
     2. poll
     3. epoll 
 
-## Thread Synchronization
+## Thread Synchronization (线程间同步)
 > 每个进程中访问临界资源的那段代码称为[临界区]（Critical Section）
 
 > [临界资源]是一次仅允许一个进程使用的共享资源
