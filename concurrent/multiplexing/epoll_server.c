@@ -39,6 +39,13 @@ event：告诉内核需要监听的事件
         EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的
         EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里
 
+        typedef union epoll_data
+        {
+            void* ptr;
+            int fd;
+            uint32_t u32;
+            uint64_t u64;
+        }epoll_data_t;
 
 
 #include <sys/epoll.h>
@@ -94,17 +101,18 @@ int main(int argc, char *argv[])
     for (i = 0; i < OPEN_MAX; i++)
         client[i] = -1;
     maxi = -1;
-    efd = epoll_create(OPEN_MAX);//创建epoll句柄 OPEN_MAX个文件描述符                                         epoll_create
 
+    efd = epoll_create(OPEN_MAX);//创建epoll句柄 OPEN_MAX个文件描述符                                         epoll_create
     if (efd == -1)
         perr_exit("epoll_create");
+
     tep.events = EPOLLIN;  //对应的文件描述符可读
     tep.data.fd = listenfd; //
 
     res = epoll_ctl(efd, EPOLL_CTL_ADD, listenfd, &tep);//控制某个epoll监控的文件描述符上的事件 注册 修改 删除     epoll_ctl
-
     if (res == -1)
         perr_exit("epoll_ctl");
+
     for ( ; ; ) {
         // efd :
         // ep : 冲内核得到的事件集合
@@ -112,6 +120,8 @@ int main(int argc, char *argv[])
         nready = epoll_wait(efd, ep, OPEN_MAX, -1); //内存拷贝，利用mmap()文件映射内存加速与内核空间的消息传递；即epoll使用mmap减少复制开销  epoll_wait
         if (nready == -1) //-1表示阻塞
             perr_exit("epoll_wait");
+
+
         for (i = 0; i < nready; i++)
         {
             if (!(ep[i].events & EPOLLIN))
@@ -136,8 +146,8 @@ int main(int argc, char *argv[])
 
                 tep.events = EPOLLIN;
                 tep.data.fd = connfd; /* max index in client[] array */
-                res = epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &tep);// 监听新的文件描述符
 
+                res = epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &tep);// 监听新的文件描述符
                 if (res == -1)
                     perr_exit("epoll_ctl");
             }
@@ -155,9 +165,11 @@ int main(int argc, char *argv[])
                             break;
                         }
                     }
+
                     res = epoll_ctl(efd, EPOLL_CTL_DEL, sockfd, NULL);//将该文件描述符从红黑树上摘除
                     if (res == -1)
                         perr_exit("epoll_ctl");
+
                     Close(sockfd);//关闭与客户端连接
                     printf("client[%d] closed connection\n", j);
                 }

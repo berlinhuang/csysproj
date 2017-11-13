@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <sys/epoll.h>
+
 void perr_exit(const char *s)
 {
     perror(s);
@@ -238,3 +240,46 @@ ssize_t Readline(int fd, void *vptr, size_t maxlen)
     *ptr = 0;
     return n;
 }
+
+
+/**
+ *
+ * @param open_max
+ * @return
+ */
+int epollcreate( int open_max )
+{
+    int efd = epoll_create(open_max);//创建epoll句柄 OPEN_MAX个文件描述符                                         epoll_create
+    if (efd == -1)
+        perr_exit("epoll_create");
+    return efd;
+}
+
+/**
+ *
+ * @param efd
+ * @param op
+ * @param fd
+ * @param tep
+ * @return
+ */
+void epollctl(int efd, int op, int fd, struct epoll_event *tep)
+{
+    int res = epoll_ctl(efd, EPOLL_CTL_ADD, fd, tep);//控制某个epoll监控的文件描述符上的事件 注册 修改 删除     epoll_ctl
+    if (res == -1)
+        perr_exit("epoll_ctl");
+}
+/**
+ *
+ * @param efd
+ * @param events 冲内核得到的事件集合
+ * @param maxevents 告诉内核ep多大，不能大于创建epoll_create(int size) 中size的大小
+ * @param timeout
+ * @return
+ */
+int epollwait(int efd, struct epoll_event *events, int maxevents, int timeout ){
+    int nready = epoll_wait(efd, events, maxevents, timeout); //内存拷贝，利用mmap()文件映射内存加速与内核空间的消息传递；即epoll使用mmap减少复制开销  epoll_wait
+    if (nready == -1) //-1表示阻塞
+        perr_exit("epoll_wait");
+    return nready;
+};

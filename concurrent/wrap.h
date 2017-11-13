@@ -20,4 +20,9 @@ static ssize_t my_read(int fd, char *ptr);
 ssize_t Readline(int fd, void *vptr, size_t maxlen);
 
 
+int epollcreate( int open_max );
+void epollctl(int efd, int op, int fd, struct epoll_event *tep);
+int epollwait(int efd, struct epoll_event *events, int maxevents, int timeout );
+
+
 #endif //CSYSPROJ_WRAP_H
