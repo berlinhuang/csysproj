@@ -8,6 +8,7 @@
 #define NLOOP 5000
 int counter; /* incremented by threads */
 void *doit(void *);
+
 int main(int argc, char **argv)
 {
     pthread_t tidA, tidB;
@@ -22,6 +23,7 @@ int main(int argc, char **argv)
     pthread_join(tidB, NULL);
     return 0;
 }
+
 void *doit(void *vptr)
 {
     int i, val;
