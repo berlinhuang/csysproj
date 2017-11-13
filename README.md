@@ -1,5 +1,5 @@
 # csysproj
-
+> This repo describes the sys programming in linux using C language
 ## concurrent (处理并发的模型)
 
 - multiprocess (多进程处理并发)
@@ -31,12 +31,14 @@
 - pipe 匿名管道 用于有血缘关系的进程之间,通过fork来传递
 - fifo 有名管道 解决无血缘关系的进程通信
 - mmap  内存共享映射
-- Unix Domain Socket Unix域套接字(同一台主机上client和server之间通信)
+- socket 套接字
+    - Unix域套接字 (Unix Domain Socket) (同一台主机上client和server之间通信)
+    - 网络套接字
+        > socket( AF_UNIX, SOCK_STREAM, ... )   域间流式套接字
     
-    > socket( AF_UNIX, SOCK_STREAM, ... )   域间流式套接字
+        > socket( AF_INET, SOCK_DGRAM, ... ) 网络数据包套接字
+    - 建立套接字流程
     
-    > socket( AF_INET, SOCK_DGRAM, ... ) 数据包套接字
-    
-    > server: socket() bind() listen() accept()...
-    
-    > client: socket() connect() ...
+        > server: socket() bind() listen() accept()...
+        
+        > client: socket() connect() ...
