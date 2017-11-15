@@ -8,9 +8,9 @@
     > pthread_create()
 - multiplexing (I/O多路复用处理并发)
 
-    1. select
+    1. select   
     2. poll
-    3. epoll 
+    3. epoll    epoll是通过链表和红黑树来实现的
 > 每个进程/线程处理一个连接, 由于申请进程/线程会占用相当可观的系统资源，同时对于多进程/线程的管理会对系统造成压力，因此这种方案不具备良好的可扩展性
 
 ## Thread Synchronization (线程间同步)
