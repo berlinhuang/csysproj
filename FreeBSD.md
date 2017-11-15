@@ -1,3 +1,4 @@
+### FreeBSD
 | 公司  |  系统   | 语言 |
 | :------------ |:---------------:| -----:|
 | Ken Thompson(1969)   | Unics | 执行于PDP-7机器上(汇编语言) |
@@ -8,3 +9,14 @@
 | AT&T  | System V  |     |
 | IBM   | AIX       |     |
 | HP    | HP-UX     |     |
+
+
+
+### linux distrubution
+- community:  Debian series
+    - Debian
+    - ubuntu
+- commercial: Redhat series 
+    - RHEL
+    - Fedora
+    - CentOs
