@@ -11,6 +11,7 @@
     1. select
     2. poll
     3. epoll 
+> 每个进程/线程处理一个连接, 由于申请进程/线程会占用相当可观的系统资源，同时对于多进程/线程的管理会对系统造成压力，因此这种方案不具备良好的可扩展性
 
 ## Thread Synchronization (线程间同步)
 > 每个进程中访问临界资源的那段代码称为[临界区]（Critical Section）
@@ -42,8 +43,40 @@
         > server: socket() bind() listen() accept()...
         
         > client: socket() connect() ...
-      
 ---
+
+### C10K
+
+> FreeBSD推出了kqueue，Linux推出了epoll，Windows推出了IOCP，Solaris推出了/dev/poll。这些操作系统提供的功能就是为了解决C10K问题。
+
+> epoll技术的编程模型就是异步非阻塞回调，也可以叫做Reactor，事件驱动，事件轮循（EventLoop）。
+
+> Nginx，libevent，node.js这些就是Epoll时代的产物
+
+> 由于epoll, kqueue, IOCP每个接口都有自己的特点，程序移植非常困难，于是需要对这些接口进行封装，以让它们易于使用和移植，其中libevent库就是其中之一。跨平台，封装底层平台的调用，提供统一的 API，但底层在不同平台上自动选择合适的调用。
+
+> 在处理IO的时候，阻塞和非阻塞都是同步IO。 只有使用了特殊的API才是异步IO。
+
+<table>
+    <tr>
+        <td rowspan = "2">同步</td>
+        <td colspan = "2" >IO multiplexing(select/poll/epoll)</td>
+        <td rowspan = "2">异步</td>
+        <td>Linux</td>
+        <td>Windows</td>
+        <td>.NET</td>
+    </tr>
+    <tr>
+        <td>阻塞</td>
+        <td>非阻塞</td>
+        <td>AIO</td>
+        <td>IOCP</td>
+        <td>BeginInvoke/EndInvoke</td>
+    </tr>
+</table>
+
+
+
 ### Networlk Library
 
 - C - libevent
