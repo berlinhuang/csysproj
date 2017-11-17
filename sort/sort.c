@@ -62,3 +62,69 @@ void InsertSort(RecNode r[], int n)
         r[j+1]=r[0];
     }
 }
+
+
+void BinInseSort(RecNode r[], int n)
+{
+    int i, j, low, high, mid;
+    for (i = 2; i <= n; i++)
+    {
+        r[0]=r[i];
+        low =1;
+        high=i-1;
+        while(low<=high)
+        {
+            mid=(low+high)/2;
+            if(r[0].key<r[mid].key)
+                high = mid -1;
+            else
+                low = mid + 1;
+        }
+        for(j=i-1;j>=low;j--)
+            r[j+1]=r[j];
+        r[low] =r[0];
+    }
+}
+
+
+void BubbleSort( RecNode r[], int n)
+{
+    int i,j;
+    int swap;
+    for(i=1;i<n;i++)
+    {
+        swap = 0;
+        for(j=1;j<=n-i;j++)
+            if(r[j].key>r[j+1].key)
+            {
+                r[0]=r[j+1];
+                r[j+1]=r[j];
+                r[j]=r[0];
+                swap = 1;
+            }
+        if(swap == 0)
+            break;
+    }
+}
+
+
+void SelectSort(RecNode r[],int n)
+{
+    int i,j,k;
+    for(i=1;i<n;i++)
+    {
+        k=i;
+        for(j=i+1;j<=n;j++)
+        {
+            if(r[j].key<r[k].key)
+                k=j;
+        }
+        if(k!=i)
+        {
+            r[0]=r[k];
+            r[k]=r[i];
+            r[i]=r[0];
+        }
+    }
+}
+

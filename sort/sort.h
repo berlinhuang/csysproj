@@ -24,6 +24,9 @@ typedef struct
 int Partition(RecNode r[], int low, int high );
 
 void InsertSort(RecNode r[], int n);
+void BinInseSort(RecNode r[], int n);
 void QuickSort( RecNode r[], int m, int n);
+void BubbleSort( RecNode r[], int n);
+void SelectSort(RecNode r[],int n);
 
 #endif //CSYSPROJ_SORT_H
