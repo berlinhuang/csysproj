@@ -1,9 +1,10 @@
 //
-// Created by root on 17-11-14.
+// Created by root on 17-11-17.
 //
-#include <stdio.h>
-#include "sort.h"
 
+
+#include "sort.h"
+#include <stdio.h>
 
 
 int main()
@@ -14,12 +15,12 @@ int main()
 //    printf("%ld",sizeof(RNode)/ sizeof(RNode[0]));
     int i ;
     int len = sizeof(a)/sizeof(a[0]);
-    for( i =0;i<len ;i++)
+    for( i =1;i<=len ;i++)
     {
-        RNode[i].key = a[i];
+        RNode[i].key = a[i-1];//RNode[0] 当成观察哨
     }
-    QuickSort(RNode, 0, len-1);
-    for( i = 0;i<len;i++)
+    InsertSort(RNode,len);
+    for( i = 1;i<=len;i++)
     {
         printf("%d ",RNode[i].key);
     }
