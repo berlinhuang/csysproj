@@ -1,0 +1,1 @@
+add_executable(quicksort quicksort.c)
