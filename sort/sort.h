@@ -14,11 +14,6 @@ typedef struct
 
 }RecNode;
 
-typedef struct
-{
-    RecNode elem[MAXNODENUM];
-    int length;
-}SeqTable;
 
 
 int Partition(RecNode r[], int low, int high );
