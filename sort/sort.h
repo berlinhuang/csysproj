@@ -14,14 +14,23 @@ typedef struct
 
 }RecNode;
 
+//insert sort
+void InsertSort( RecNode r[], int n);
+void BinInseSort( RecNode r[], int n);
+void ShellSort( RecNode r[], int n);
 
-
-int Partition(RecNode r[], int low, int high );
-
-void InsertSort(RecNode r[], int n);
-void BinInseSort(RecNode r[], int n);
-void QuickSort( RecNode r[], int m, int n);
+//swap sort
 void BubbleSort( RecNode r[], int n);
-void SelectSort(RecNode r[],int n);
+void QuickSort( RecNode r[], int m, int n);
+
+//select sort
+void SelectSort( RecNode r[], int n);
+void HeapSort( RecNode r[], int n);
+
+
+//merge
+void MergeSort(RecNode r[], int n);
+
+//base
 
 #endif //CSYSPROJ_SORT_H
