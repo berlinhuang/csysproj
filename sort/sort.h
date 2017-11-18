@@ -16,7 +16,7 @@ typedef struct
 
 //insert sort
 void InsertSort( RecNode r[], int n);
-void BinInseSort( RecNode r[], int n);
+void BinInseSort( RecNode r[], int n);//折半插入 排序
 void ShellSort( RecNode r[], int n);
 
 //swap sort
