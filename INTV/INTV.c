@@ -5,7 +5,8 @@
 #include "INTV.h"
 #include <stdio.h>
 #include <malloc.h>
-
+#include <ctype.h>
+#include <stdlib.h>
 
 LinkList  InitLinkList_headnode()
 {
@@ -275,4 +276,35 @@ LinkList MergerLinkList(LinkList La,LinkList Lb)
     pc->next=pa?pa:pb;
     free(Lb);
     return Lc;
+}
+
+
+/////////////////////////////////////////////////////////
+
+int my_atoi(const char *str)
+{
+    int s=0;
+    int falg=0;
+
+    while(*str==' ')
+    {
+        str++;
+    }
+    if(*str=='-'||*str=='+')
+    {
+        if(*str=='-')
+            falg=1;
+        str++;
+    }
+    while(*str>='0'&&*str<='9')
+    {
+        s=s*10+*str-'0';
+        str++;
+        if(s<0)
+        {
+            s=2147483647;
+            break;
+        }
+    }
+    return s*(falg?-1:1);
 }

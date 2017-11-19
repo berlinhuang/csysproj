@@ -35,7 +35,7 @@ LinkList MergerLinkList(LinkList La,LinkList Lb);//升序序链表 合并为升�
 ///////////////////////////////////////////////////////////////////////////////////////
 
 
-
+int my_atoi(const char *str);
 
 
 #endif //CSYSPROJ_INTV_H
