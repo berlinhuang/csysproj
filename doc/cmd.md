@@ -6,7 +6,14 @@
 
 [4. ipcrm](#4)
 
-<h3 id = "1"> netstat</h2>
+[5. ps top ](#5)
+
+ [5.1 ps](#5.1)
+    
+ [5.2 top](#5.2)
+    
+
+<h3 id = "1"> netstat</h3>
 
 - \-a (all)显示所有选项，默认不显示LISTEN相关
 - \-t (tcp)仅显示tcp相关选项
@@ -30,7 +37,7 @@
 
 > netstat -lnp
 
-<h3 id = "2"> tcpdump</h2>
+<h3 id = "2"> tcpdump</h3>
 
 > tcpdump [-AennqX] [-i 接口] [-w 储存档名] [-c 次数]  [-r 档案] [所欲撷取的封包数据格式]
 
@@ -126,7 +133,7 @@
 4. 资源共享，多个进程之间共享同样的资源。为了做到这一点，需要内核提供锁和同步机制；
 5. 进程控制，有些进程希望完全控制另一个进程的执行（如Debug进程），此时控制进程希望能够拦截另一个进程的所有陷入和异常，并能够及时知道它的状态改变。
 
-<h3 id = "3"> ipcs(state) 提供IPC设备的信息 包括共享内存，消息队列，信号</h2>  
+<h3 id = "3"> ipcs(state) 提供IPC设备的信息 包括共享内存，消息队列，信号</h3>  
 
 > ipcs [resource-option] [output-format]
 
@@ -147,7 +154,7 @@
 - 额外格式控制：　以人类可以阅读的方式显示size
     - ipcs -l --human
 
-<h3 id = "3"> ipcrm(remove) </h2>  
+<h3 id = "4"> ipcrm(remove) </h3>  
 
 > 通过指定ID删除IPC资源，同时将与IPC对象关联的数据一并删除，只有超级用户或IPC资源创建者能够删除
 
@@ -158,8 +165,48 @@
 - ipcrm -Q msgkey   移除用msgkey创建的    消息队列
 - ipcrm -q msgid    移除用msgid标识的     消息队列
 
-
 ---
 
+<h3 id = "5"> ps top </h3>  
+<h4 id='5.1'> ps </h4>
+1. UNIX 风格，选项可以组合在一起，并且选项前必须有“-”连字符 ps -ef
+2. BSD 风格，选项可以组合在一起，但是选项前不能有“-”连字符 ps aux
+3. GNU 风格的长选项，选项前有两个“-”连字符
+
+- 选项与参数：
+    - -A  ：所有的 process 均显示出来，与 -e 具有同样的效用；
+    - -a  ：不与 terminal 有关的所有 process ；
+    - -u  ：有效使用者 (effective user) 相关的 process ；
+    - x   ：通常与 a 这个参数一起使用，可列出较完整资讯
+- 输出格式规划：
+    - l   ：较长、较详细的将该 PID 的的资讯列出；
+    - j   ：工作的格式 (jobs format)
+    - -f  ：做一个更为完整的输出。
 
 
+- ps 
+- ps -ax    //-a 代表 all。同时加上x参数会显示没有控制终端的进程
+- ps -ax | less //less命令和管道来使用
+- ps -u berlin //用户’berlin’的进程
+- ps -aux | less //通过cpu和内存使用来过滤进程
+- ps -aux --sort -pcpu | less //根据 CPU使用 来升序排序
+- ps -aux --sort -pmem | less //根据 内存使用 来升序排序
+- ps -C getty     //使用 -C 参数，后面跟你要找的进程的名字    
+- ps -L 1213     //特定进程的线程，可以使用-L 参数，后面加上特定的PID 
+  
+<h4 id='5.2'> top </h4>
+
+> top [-d 数字] | top [-bnp]   
+            
+- 选项与参数：
+    - -d  ：后面可以接秒数，就是整个程序画面升级的秒数。默认是 5 秒；
+    - -b  ：以批量的方式运行 top ，还有更多的参数可以使用喔！通常会搭配数据流重导向来将批量的结果输出成为文件。
+    - -n  ：与 -b 搭配，意义是，需要进行几次 top 的输出结果。
+    - -p  ：指定某些个 PID 来进行观察监测而已。
+    
+> 将top的资讯进行2次，然后将结果输出到/tmp/top.txt
+- top -b -n 2 > /tmp/top.txt  
+
+> 我们自己的bash PID可由$$变量取得，请使用top持续观察该PID : 
+- echo $$
+- top -d 2 -p 13639
