@@ -140,7 +140,7 @@ void lt( struct epoll_event* events, int number, int epollfd, int listenfd)
             {
                 printf("recv 0\r\n");
                 close(sockfd);
-                continue;.
+                continue;
             }
             printf("recv data form %d buf is %s \r\n",sockfd,buf);
 

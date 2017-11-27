@@ -16,11 +16,30 @@
 - 接受连接中的accept
 - 发起连接中的connect
 
-> 非阻塞accept
+#### 非阻塞accept
 
-> 非阻塞connect
+> 服务器端select向服务器进程返回可读，但服务器要在一段时间后才能调用accpet
+> 在服务器从select返回和调用accept之间，收到来看客户端的RST
+> 这个已完成的连接从队列中删除（假设没有在其它已完成的连接存在）
+> 服务器调用 accept，但是由于没有已完成的连接，就阻塞了 
 
+> 解决方法 ：
+> 将监听套接口置为非阻塞 并且在后面的accept调用中忽略 下面错误
+- \#define EWOULDBLOCK	EAGAIN	//Operation would block 
+- \#define	ECONNABORTED	103	//Software caused connection abort
+- \#define	EPROTO		71	// Protocol error 
 
+#### 非阻塞connect
+> 三种用途
+1. 我们可以在三路握手的同时做一些其它的处理。
+2. 可以用这种技术同时建立多个连接
+3. 由于我们使用select 来等待连接的完，因此我们可以给select设置一个时间限制，从而缩短connect 的超时时间。
+
+> 实现步骤
+1. 创建socket，返回套接口描述符；
+2. 调用fcntl 把套接口描述符设置成非阻塞；
+3. 调用connect 开始建立连接；
+4. 判断连接是否成功建立。
 
 
 ## LT ET

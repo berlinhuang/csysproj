@@ -98,9 +98,13 @@ int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr)
  * @param fd
  * @param sa 传入参数，指定服务器端地址信息，含IP地址和端口号
  * @param salen 传入参数,传入sizeof(sa)大小
- * @return 成功返回0，失败返回-1，设置errno
+ * @return 成功返回0，失败返回-1，设置errno         如果对方未响应，要隔6s，重发尝试，可能要等待75s的尝试并最终返回超时，才得知连接失败。
  */
 
+//// 即使是一次尝试成功，也会等待几毫秒到几秒的时间，如果此期间有其他事务要处理，则会白白浪费时间，而用非阻塞的connect 则可以做到并行，提高效率。
+//// 而通常，非阻塞的connect 函数与 select 函数配合使用：在一个TCP套接口被设置为非阻塞之后调用connect，
+//// connect （函数本身返回-1）会立即返回EINPROGRESS或EWOULDBLOCK错误，表示连接操作正在进行中，但是仍未完成；同时TCP的三路握手操作继续进行；
+//// 在这之后，我们可以调用select来检查这个链接是否建立成功。若建立连接成功，select的结果中该描述符可写；若失败，则可写可读，此时可以使用getsockopt获取错误信息。
 void Connect(int fd, const struct sockaddr *sa, socklen_t salen)
 {
     if (connect(fd, sa, salen) < 0)
