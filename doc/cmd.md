@@ -1,5 +1,13 @@
+[1. netstat](#1)
 
-### netstat
+[2. tcpdump](#2)
+
+[3. ipcs](#3)
+
+[4. ipcrm](#4)
+
+<h3 id = "1"> netstat</h2>
+
 - \-a (all)显示所有选项，默认不显示LISTEN相关
 - \-t (tcp)仅显示tcp相关选项
 - \-u (udp)仅显示udp相关选项
@@ -22,7 +30,8 @@
 
 > netstat -lnp
 
-### tcpdump
+<h3 id = "2"> tcpdump</h2>
+
 > tcpdump [-AennqX] [-i 接口] [-w 储存档名] [-c 次数]  [-r 档案] [所欲撷取的封包数据格式]
 
 - \-A ：封包的内容以 ASCII 显示，通常用来捉取 WWW 的网页封包资料。
@@ -117,8 +126,7 @@
 4. 资源共享，多个进程之间共享同样的资源。为了做到这一点，需要内核提供锁和同步机制；
 5. 进程控制，有些进程希望完全控制另一个进程的执行（如Debug进程），此时控制进程希望能够拦截另一个进程的所有陷入和异常，并能够及时知道它的状态改变。
 
-
-### ipcs(state)   提供IPC设备的信息 包括共享内存，消息队列，信号
+<h3 id = "3"> ipcs(state) 提供IPC设备的信息 包括共享内存，消息队列，信号</h2>  
 
 > ipcs [resource-option] [output-format]
 
@@ -139,7 +147,7 @@
 - 额外格式控制：　以人类可以阅读的方式显示size
     - ipcs -l --human
 
-### ipcrm(remove)
+<h3 id = "3"> ipcrm(remove) </h2>  
 
 > 通过指定ID删除IPC资源，同时将与IPC对象关联的数据一并删除，只有超级用户或IPC资源创建者能够删除
 
@@ -149,3 +157,9 @@
 - ipcrm -s semid    移除用semid标识的     信号量
 - ipcrm -Q msgkey   移除用msgkey创建的    消息队列
 - ipcrm -q msgid    移除用msgid标识的     消息队列
+
+
+---
+
+
+
