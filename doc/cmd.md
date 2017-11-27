@@ -11,9 +11,16 @@
 -   [5.1 ps](#5.1)
     
 -   [5.2 top](#5.2)
-    
 
-<h3 id = "1"> netstat</h3>
+[6. sed awk](#6)    
+
+-   [6.1 sed](#6.1)
+    
+-   [6.2 awk](#6.2)
+
+-   [6.3 正规表达式](#6.3)
+---
+<h3 id = "1"> 1. netstat</h3>
 
 - \-a (all)显示所有选项，默认不显示LISTEN相关
 - \-t (tcp)仅显示tcp相关选项
@@ -37,7 +44,7 @@
 
 > netstat -lnp
 
-<h3 id = "2"> tcpdump</h3>
+<h3 id = "2">2. tcpdump</h3>
 
 > tcpdump [-AennqX] [-i 接口] [-w 储存档名] [-c 次数]  [-r 档案] [所欲撷取的封包数据格式]
 
@@ -125,7 +132,7 @@
 
 
 ---
-
+> 共享内存作用
 
 1. 数据传输，一个进程需要将它的数据发送给另一个进程，发送的数据量在一个字节到几M之间；
 2. 共享数据，多个进程想要操作共享数据，一个进程对数据的修改，其他进程应该立刻看到；
@@ -133,7 +140,7 @@
 4. 资源共享，多个进程之间共享同样的资源。为了做到这一点，需要内核提供锁和同步机制；
 5. 进程控制，有些进程希望完全控制另一个进程的执行（如Debug进程），此时控制进程希望能够拦截另一个进程的所有陷入和异常，并能够及时知道它的状态改变。
 
-<h3 id = "3"> ipcs(state) 提供IPC设备的信息 包括共享内存，消息队列，信号</h3>  
+<h3 id = "3"> 3. ipcs(state) 提供IPC设备的信息 包括共享内存，消息队列，信号</h3>  
 
 > ipcs [resource-option] [output-format]
 
@@ -154,7 +161,7 @@
 - 额外格式控制：　以人类可以阅读的方式显示size
     - ipcs -l --human
 
-<h3 id = "4"> ipcrm(remove) </h3>  
+<h3 id = "4"> 4. ipcrm(remove) </h3>  
 
 > 通过指定ID删除IPC资源，同时将与IPC对象关联的数据一并删除，只有超级用户或IPC资源创建者能够删除
 
@@ -167,8 +174,8 @@
 
 ---
 
-<h3 id = "5"> ps top </h3>  
-<h4 id='5.1'> ps </h4>
+<h3 id = "5"> 5. ps top </h3>  
+<h4 id='5.1'> 5.1 ps </h4>
 1. UNIX 风格，选项可以组合在一起，并且选项前必须有“-”连字符 ps -ef
 2. BSD 风格，选项可以组合在一起，但是选项前不能有“-”连字符 ps aux
 3. GNU 风格的长选项，选项前有两个“-”连字符
@@ -194,7 +201,7 @@
 - ps -C getty     //使用 -C 参数，后面跟你要找的进程的名字    
 - ps -L 1213     //特定进程的线程，可以使用-L 参数，后面加上特定的PID 
   
-<h4 id='5.2'> top </h4>
+<h4 id='5.2'> 5.2 top </h4>
 
 > top [-d 数字] | top [-bnp]   
             
@@ -210,3 +217,132 @@
 > 我们自己的bash PID可由$$变量取得，请使用top持续观察该PID : 
 - echo $$
 - top -d 2 -p 13639
+
+
+---
+<h3 id = "6"> 6. sed awk </h3>  
+<h4 id='6.1'> 6.1 sed </h4>
+
+> sed [-nefr] [动作]
+
+- 选项与参数：
+    - -n  ：使用安静(silent)模式。在一般 sed 的用法中，所有来自 STDIN 
+      的数据一般都会被列出到萤幕上。但如果加上 -n 参数后，则只有经过
+      sed 特殊处理的那一行(或者动作)才会被列出来。
+    - -e  ：直接在命令列模式上进行 sed 的动作编辑；
+    - -f  ：直接将 sed 的动作写在一个文件内， -f filename 则可以运行 filename 内的 
+      sed 动作；
+    - -r  ：sed 的动作支持的是延伸型正规表示法的语法。(默认是基础正规表示法语法)
+    - -i  ：直接修改读取的文件内容，而不是由萤幕输出。
+
+- 动作说明：  [n1[,n2]]function
+    - n1, n2 ：不见得会存在，一般代表『选择进行动作的行数』，举例来说，如果我的动作
+         是需要在 10 到 20 行之间进行的，则『 10,20[动作行为] 』
+
+- function 有底下这些咚咚：
+    - a   ：新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)～
+    - c   ：取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！
+    - d   ：删除，因为是删除啊，所以 d 后面通常不接任何咚咚；
+    - i   ：插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)；
+    - p   ：列印，亦即将某个选择的数据印出。通常 p 会与参数 sed -n 一起运行～
+    - s   ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正规表示法！例如 1,20s/old/new/g 就是啦！
+以行为单位的新增/删除功能
+
+> 将/etc/passwd的内容列出并且列印行号，同时，请将第 2~5 行删除
+- nl /etc/passwd | sed '2,5d'
+
+> 在第二行后面加入两行字，例如『Drink tea or .....』与『drink beer?』
+-  nl /etc/passwd | sed '2a drink tea \ 
+- \> drink beer ?'
+
+> 我想将第2-5行的内容取代成为『No 2-5 number』呢？
+- nl /etc/passwd | sed '2,5c No 2-5 number'
+
+> 仅列出 /etc/passwd 文件内的第 5-7 行
+- nl /etc/passwd | sed -n '5,7p'
+
+> 部分数据的搜寻并取代的功能
+- sed 's/要被取代的字串/新的字串/g'
+
+
+>  /sbin/ifconfig eth0 | grep 'inet addr'
+- inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+
+> /sbin/ifconfig eth0 | grep 'inet addr' | \\
+
+> \>  sed 's/^.*addr://g'
+- 192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+
+> /sbin/ifconfig eth0 | grep 'inet addr' | \\
+
+> \>  sed 's/^.*addr://g' | sed 's/Bcast.*$//g'
+- 192.168.1.100 
+
+> 删除掉空白行
+- sed '/^$/d'
+
+
+<h4 id='6.2'> 6.2 awk </h4>
+
+> awk '条件类型1{动作1} 条件类型2{动作2} ...' filename
+-  awk 的内建变量
+    - NF	每一行($0)拥有的栏位总数
+    - NR	目前 awk 所处理的是『第几行』数据
+    - FS	目前的分隔字节，默认是空白键
+- awk 的逻辑运算字节
+    - \>	大於
+    - <	小於
+    - \>=	大於或等於
+    - <=	小於或等於
+    - ==	等於
+    - !=	不等於
+
+
+> 用 last 可以将登陆者的数据取出来
+- last -n 5
+
+> 用 last 可以将登陆者的数据取出来 第一列和第三列
+- last -n 5 | awk '{print $1 "\t" $3}'
+
+     
+- last -n 5| awk '{print $1 "\t lines: " NR "\t columns: " NF}'
+
+> 要查阅第三栏小於10以下的数据，并且仅列出帐号与第三栏 仅能在第二行后才开始生效
+- cat /etc/passwd | awk '{FS=":"} $3 < 10 {print $1 "\t " $3}'
+> Begin 在第1行开始生效
+- cat /etc/passwd | awk 'BEGIN {FS=":"} $3 < 10 {print $1 "\t " $3}'
+
+
+
+<h4 id='6.3'> 6.3 正规表达式 </h4>
+
+> 待搜寻的字串(word)在行首！
+- grep -n '^word' regular_express.txt
+
+> 待搜寻的字串(word)在行尾！
+- grep -n 'word$' regular_express.txt
+
+> 搜寻含有单引号 ' 的那一行！ 转义字符\
+- grep -n \\' regular_express.txt
+
+> . 一个字节, 搜寻的字串可以是 (eve) (eae) (eee) (e e)， 但不能仅有 (ee)
+- grep -n 'e.e' regular_express.txt
+
+> \* 重复零个到无穷多个的前一个RE字符, 找出含有 (es) (ess) (esss) 等等的字串，注意，因为 * 可以是 0 个，所以 es 也是符合带搜寻字串
+- grep -n 'ess*' regular_express.txt 
+
+> [list]
+ 
+> 搜寻含有 (gl) 或 (gd) 的那一行. 例如『 a[afl]y 』代表搜寻的字串可以是 aay, afy, aly 即 [afl] 代表 a 或 f 或 l 的意思！
+- grep -n 'g[ld]' regular_express.txt
+
+> [n1-n2]
+ 
+> 例如不想要开头是英文字母
+- grep -n '^[^a-zA-Z]' regular_express.txt
+- grep -n '^[^[:alpha:]]' regular_express.txt
+
+> \\{n,m\\}    
+
+> 在 g 与 g 之间有 2 个到 3 个的 o 存在的字串，亦即 (goog)(gooog)
+- grep -n 'go\\{2,3\\}g' regular_express.txt
