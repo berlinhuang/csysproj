@@ -1,7 +1,7 @@
 
 > array 静态数组
 
-#### STL
+### Sequence Containers
 > vector 动态数组 
 ```C++
     template < class T,
@@ -49,14 +49,91 @@
     <queue>
     template <  class T, 
                 class Sequence = vector<T>,//容纳优先队列的容器 也可以是dequeue
-                class Compare = less<typename Sequence::value_type> >// 从大到小
+                class Compare = less<typename Sequence::value_type> >//从小到大
     class priority_queue{
     
     }
     
     
-    priority_queue< int, vector<int>, greater<int> > p;//从小到大
+    priority_queue< int, vector<int>, greater<int> > p;// 从大到小
     
     
 ```
 - 底部以vector作为容器
+
+
+
+---
+
+
+### Associative Containers
+
+
+> RB-tree
+
+1. set
+```C++
+    template < class Key,
+               class Compare = less<Key>, //从小到大
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class set{
+    }
+    
+```
+2. map
+```C++
+    template < class Key,
+               class T,
+               class Compare = less<Key>, //从小到大
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class map{
+    }
+    
+```
+3. multiset
+4. multimap
+
+> hashtable
+
+1. hash_set
+```C++
+    template < class Value,
+               class HashFcn = hash<Value>,
+               class EqualKey = equal_to<Value>,
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class hash_set{
+    }
+    
+```
+2. hash_map
+```C++
+    template < class Value,
+               class T,
+               class HashFcn = hash<Value>,
+               class EqualKey = equal_to<Value>,
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class hash_map{
+    }
+    
+```
+3. hash_multiset
+```C++
+    template < class Value,
+               class HashFcn = hash<Value>,
+               class EqualKey = equal_to<Value>,
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class hash_multiset{
+    }
+    
+```
+4. hash_multimap
+```C++
+    template < class Value,
+               class T,
+               class HashFcn = hash<Value>,
+               class EqualKey = equal_to<Value>,
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class hash_multimap{
+    }
+    
+```
