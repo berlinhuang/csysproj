@@ -60,7 +60,38 @@
     
 ```
 - 底部以vector作为容器
+```C++
+    // for max_heap
 
+    template< class RandomAccessIterator >
+    intline void push_heap(RandomAccessIterator first, RandomAccessItertor last)
+    {
+        __push(first, las, value_type(last));
+    }
+    
+    
+    template< class RandomAccessIterator >
+    intline void pop_heap(RandomAccessIterator first, RandomAccessItertor last)
+    {
+        __pop(first, last, value_type(first));
+    }
+    
+    template< class RandomAccessIterator >
+    void sort_heap(RandomAccessIterator first, RandomAccessItertor last)
+    {
+        while(last-first > 1)
+            pop_heap(first, last--);
+    }
+        
+    template< class RandomAccessIterator >
+    inline void make_heap(RandomAccessIterator first, RandomAccessItertor last)
+    {
+        __make_heap(first, last, value_type(first), distance_type(first));
+    }
+        
+    
+    
+```
 
 
 ---
