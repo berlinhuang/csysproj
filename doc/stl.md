@@ -10,12 +10,12 @@
     }
     
 ```
-- 以原大小两倍空间增长，讲旧数据复制过来，再添加新数据
+- 以原大小两倍空间增长，将旧数据复制过来，再添加新数据
 
 > list 环形双向链表  
 ```C++
     template < class T,
-               class Alloc = alloc > // 缺省使用alloc作为适配器
+               class Alloc = alloc > // 缺 省使用alloc作为适配器
     class list{
     }
     
