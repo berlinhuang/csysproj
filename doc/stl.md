@@ -94,6 +94,9 @@
            
     }
     
+    
+    
+    
     // 取走根节点，设置为叶节点右端元素（底部容器vector.end()），下溯
     template< class RandomAccessIterator >
     intline void pop_heap(RandomAccessIterator first, RandomAccessIterator last)
@@ -129,7 +132,8 @@
                         T value)
     {
         Distance topIndex = holeIndex;
-        Distance secondChild = 2 * holeIndex + 2;//下溯
+        //下溯
+        Distance secondChild = 2 * holeIndex + 2; //由于从0开始计算 所以右儿子为 2n + 2;
         while(secondChild < len )
         {
             if( *(first +secondChild) < *(first +(secondChild -1))
@@ -143,6 +147,8 @@
             *(first + holeIndex) = *(first + (secondChild - 1));
             holeIndex = secondChild - 1;
         }       
+         //把当初标记的最后的一个节点插入堆中( T(*(last - 1)  )
+        __push_heap(first, holeIndex, topIndex, value);
     }
     
     
@@ -172,14 +178,14 @@
                       T*,
                       Distance*)
     {
-        if (last - first < 2) return; // 长度为0或1，就返回；  
+        if (last - first < 2) return; //判断边界情况,如果只有一个元素 直接返回
             Distance len = last - first;  
-            //找到第一个调整的节点  
-            Distance parent = (len - 2)/2;      
+            Distance parent = (len - 2)/2;   //最后一个元素的父节点  下溯   
             while (true) 
             {
                 __adjust_heap(first, parent, len, T(*(first + parent)), comp);  
-                if (parent == 0) return;  
+                if (parent == 0) 
+                    return;  
                 parent--;  
             }  
     }
