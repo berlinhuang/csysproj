@@ -62,31 +62,126 @@
 - 底部以vector作为容器
 ```C++
     // for max_heap
-
+    // 底部叶节点（vector.end()）插入，上溯
     template< class RandomAccessIterator >
-    intline void push_heap(RandomAccessIterator first, RandomAccessItertor last)
+    intline void push_heap(RandomAccessIterator first, RandomAccessIterator last)
     {
-        __push(first, las, value_type(last));
+        __push(first, last, distance_type(first), value_type(last));
     }
     
+    template< class RandomAccessIterator,
+              class Distance,
+              class T>
+    __push(RandomAccessIterator first, RandomAccessIterator last, Distance*, T*)
+    {
+        __push_heap(first, Distance((last-first)-1), Distance(0), T(*(last-1)) );// first, hole, topIndex, value
+    }
     
+    //上溯
+    template< class RandomAccessIterator,
+                  class Distance,
+                  class T>
+    void __push_heap(RandomAccessIterator first, Distance holeIndex, Distance topIndex, T value)
+    {
+        Distance parent = (holeIndex - 1) / 2;// hole上溯
+        while(holeIndex > topIndex && *(first + parent) < value )
+        {
+            *(first + holeIndex) = *(first + parent);
+            holeIndex = parent;
+            parent = (holeIndex - 1) /2;
+        }
+        *(first+holeIndex) = value;
+           
+    }
+    
+    // 取走根节点，设置为叶节点右端元素（底部容器vector.end()），下溯
     template< class RandomAccessIterator >
-    intline void pop_heap(RandomAccessIterator first, RandomAccessItertor last)
+    intline void pop_heap(RandomAccessIterator first, RandomAccessIterator last)
     {
         __pop(first, last, value_type(first));
     }
     
+    template< class RandomAccessIterator, class T >
+    inline void __pop( RandomAccessIterator first, RandomAccessIterator last, T* )
+    {
+        __pop_heap(first, last - 1, last - 1,  T(*(last-1)), distance_type(first)); 
+    }
+    
+    template< class RandomAccessIterator, 
+              class Distance,
+              class T >
+    inline void __pop_heap( RandomAccessIterator first,
+                            RandomAccessIterator last,
+                            RandomAccessIterator result,
+                            T value,
+                            Distance*)
+    {
+        *result = *first;
+        __adjust_heap(first, Distance(0), Distance(last - first), value);
+    }
+    
+    template< class RandomAccessIterator, 
+              class Distance,
+              class T >
+    void __adjust_heap( RandomAccessIterator first, 
+                        Distance holeIndex,
+                        Distance len,
+                        T value)
+    {
+        Distance topIndex = holeIndex;
+        Distance secondChild = 2 * holeIndex + 2;//下溯
+        while(secondChild < len )
+        {
+            if( *(first +secondChild) < *(first +(secondChild -1))
+                secondChild --;
+            *(first+holeIndex) = *(first+secondChild);
+            holeIndex = secondChild;
+            secondChild = 2*(secondChild + 1);
+        }
+        if(secondChild == len)//只有左边节点
+        {
+            *(first + holeIndex) = *(first + (secondChild - 1));
+            holeIndex = secondChild - 1;
+        }       
+    }
+    
+    
+    
+    
+    // 不断的pop_heap，从右往前插入到vector
     template< class RandomAccessIterator >
-    void sort_heap(RandomAccessIterator first, RandomAccessItertor last)
+    void sort_heap(RandomAccessIterator first, RandomAccessIterator last)
     {
         while(last-first > 1)
             pop_heap(first, last--);
     }
         
+        
+        
     template< class RandomAccessIterator >
-    inline void make_heap(RandomAccessIterator first, RandomAccessItertor last)
+    inline void make_heap(RandomAccessIterator first, RandomAccessIterator last)
     {
         __make_heap(first, last, value_type(first), distance_type(first));
+    }
+    
+    template< class RandomAccessIterator, 
+              class Distance,
+              class T >
+    void __make_heap( RandomAccessIterator first,
+                      RandomAccessIterator last,
+                      T*,
+                      Distance*)
+    {
+        if (last - first < 2) return; // 长度为0或1，就返回；  
+            Distance len = last - first;  
+            //找到第一个调整的节点  
+            Distance parent = (len - 2)/2;      
+            while (true) 
+            {
+                __adjust_heap(first, parent, len, T(*(first + parent)), comp);  
+                if (parent == 0) return;  
+                parent--;  
+            }  
     }
         
     
