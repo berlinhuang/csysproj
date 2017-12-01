@@ -21,7 +21,7 @@
 > 32bit linux os 进程虚拟地址空间
 <table>
     <caption>32bit linux os 进程虚拟地址空间</caption>
-    <tr><td>1G内核空间</br>0xFFFFFFFF</br>|</br>0xC0000000</td><td>内存管理</br>网络管理</br>进程管理</br>驱动管理</td><td>以太网协议</br>TCP</br> IP</td></tr>
+    <tr><td>1G内核空间</br>0xFFFFFFFF</br>|</br>0xC0000000</td><td>内存管理</br>网络管理</br>进程管理</br>驱动管理</td><td>协议加工:(TCP+port)=>IP=>以太网协议</td></tr>
     <tr><td rowspan = "11">3G用户空间</br>0xBFFFFFFF</br>|</br>0x00000000</td><td>环境变量</td><td rowspan = "11">socket </br>application</td></tr>
     <tr><td>命令行参数</td><tr>
     <tr><td>栈</td></tr>
