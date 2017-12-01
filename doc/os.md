@@ -1,8 +1,28 @@
+- 线程，有时被称为轻量级进程(Lightweight Process，LWP).一个标准的线程由线程ID，当前指令指针(PC)，寄存器集合和堆栈组成。
+- 线程是cpu调度的基本单位
+- 在linux下，线程最是小的执行单位；进程是最小的分配(管理)资源单位
+
+
+> 线程间共享资源
+1. 文件描述符表
+2. 每种信号的处理方式
+3. 当前工作目录
+4. 用户ID和组ID
+5. 内存地址空间
+
+> 线程间非共享资源
+1. 线程id
+2. 处理器现场和栈指针(内核栈)
+3. 独立的栈空间(用户空间栈)
+4. errno变量
+5. 信号屏蔽字
+6. 调度优先级
+
 > 32bit linux os 进程虚拟地址空间
 <table>
     <caption>32bit linux os 进程虚拟地址空间</caption>
-    <tr><td>1G内核空间</br>0xFFFFFFFF</br>|</br>0xC0000000</td><td></td></tr>
-    <tr><td rowspan = "11">3G用户空间</br>0xBFFFFFFF</br>|</br>0x00000000</td><td>环境变量</td></tr>
+    <tr><td>1G内核空间</br>0xFFFFFFFF</br>|</br>0xC0000000</td><td>内存管理</br>网络管理</br>进程管理</br>驱动管理</td><td>以太网协议</br>TCP</br> IP</td></tr>
+    <tr><td rowspan = "11">3G用户空间</br>0xBFFFFFFF</br>|</br>0x00000000</td><td>环境变量</td><td rowspan = "11">socket </br>application</td></tr>
     <tr><td>命令行参数</td><tr>
     <tr><td>栈</td></tr>
     <tr><td></td></tr>
