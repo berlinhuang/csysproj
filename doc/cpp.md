@@ -83,21 +83,173 @@
     </tr>
 </table>
 
-> 带有虚函数的多重虚拟继承(对象模型)
+> 带有虚函数的 重复继承(对象模型)
+
+
+```C++
+    class B
+    {
+    private:
+        int a;
+        char b;
+    public:
+        virtual void f(){}
+        
+        virtual void Bf(){}
+    }
+    
+    class B1: public B
+    {
+    private:
+        int a1;
+        char b1;
+    public:
+        virtual void f(){}
+        virtual void f1(){}
+        
+        virtual void Bf1(){}
+    }
+    
+    class B2: public B
+    {
+    private:
+        int a1;
+        char b1;
+    public:
+        virtual void f(){}
+        virtual void f2(){}
+        
+        virtual void Bf2(){}
+    }
+    
+    
+    class D:public B1, public B2
+    {
+    private:
+        int ad;
+        char bd;
+    public:
+        virtual void f(){}
+        
+        virtual void f1(){}
+        virtual void f2(){}
+        
+        virtual void Df(){}
+    }
+
+```
+
+- vptr@B1:
+    - D::f//重写
+    - B::Bf
+    - D::f1//重写
+    - B1::Bf1
+    - D::Df
+    
+- vptr@B2:
+    - D::f//重写
+    - B::Bf
+    - D::f2//重写
+    - B2::Bf2
 
 <table>
-    <tr><td>0</td><td rowspan = "4" >B1</td><td>虚函数表指针:vptr</td></tr>
-    <tr><td>4</td><td>虚基类指针:vbptr</td></tr>
+    <tr><td>0</td><td rowspan = "5" >B1</td><td>虚函数表指针:vptr@B1</td></tr>
+    <tr><td>4</td><td>a</td></tr>
+    <tr><td>8</td><td>b</td></tr>
+    <tr><td>12</td><td>a1</td></tr>  
+    <tr><td>16</td><td>b1</td></tr>
+    <tr><td>20</td><td rowspan = "5" >B1</td><td>虚函数表指针:vptr@B2</td></tr>
+    <tr><td>24</td><td>a</td></tr>
+    <tr><td>28</td><td>b</td></tr>
+    <tr><td>32</td><td>a2</td></tr>  
+    <tr><td>36</td><td>b2</td></tr>  
+    <tr><td>40</td><td rowspan = "3" >B1</td><td>ad</td></tr>
+    <tr><td>44</td><td>bd</td></tr>
+</table>
+
+
+> 带有虚函数的 多重虚拟继承(对象模型)
+- 多了vbptr来存储到公共基类的偏移
+
+
+```C++
+    class B
+    {
+    private:
+        int a;
+        char b;
+    public:
+        virtual void f(){}
+        
+        virtual void Bf(){}
+    }
+    
+    class B1:virtual public B
+    {
+    private:
+        int a1;
+        char b1;
+    public:
+        virtual void f(){}
+        virtual void f1(){}
+        
+        virtual void Bf1(){}
+    }
+    
+    class B2:virtual public B
+    {
+    private:
+        int a1;
+        char b1;
+    public:
+        virtual void f(){}
+        virtual void f2(){}
+        
+        virtual void Bf2(){}
+    }
+    
+    
+    class D:public B1, public B2
+    {
+    private:
+        int ad;
+        char bd;
+    public:
+        virtual void f(){}
+        
+        virtual void f1(){}
+        virtual void f2(){}
+        
+        virtual void Df(){}
+    }
+
+```
+- vptr@B1
+    - D::f1()//重写
+    - B1::Bf1()
+    - D::Df()
+
+- vptr@B2
+    - D:f2()//重写
+    - B2::Bf2()
+
+- vptr@B
+    - D::f()//重写
+    - B::f()
+
+<table>
+    <tr><td>0</td><td rowspan = "4" >B1</td><td>虚函数表指针:vptr@B1</td></tr>
+    <tr><td>4</td><td>虚基类指针:vbptr@B1</td></tr>
     <tr><td>8</td><td>a1</td></tr>
     <tr><td>12</td><td>b1</td></tr>    
-    <tr><td>16</td><td rowspan = "4" >B2</td><td>虚函数表指针:vptr</td></tr>
-    <tr><td>20</td><td>虚基类指针:vbptr</td></tr>
+    <tr><td>16</td><td rowspan = "4" >B2</td><td>虚函数表指针:vptr@B2</td></tr>
+    <tr><td>20</td><td>虚基类指针:vbptr@B2</td></tr>
     <tr><td>24</td><td>a2</td></tr>
     <tr><td>28</td><td>b2</td></tr>
     <tr><td>32</td><td rowspan = "2" >D</td><td>ad</td></tr>
     <tr><td>36</td><td>bd</td></tr>
     <tr><td>40</td><td rowspan = "4" >B</td><td>vtordisp for vbase B</td></tr>
-    <tr><td>44</td><td>虚函数表指针:vptr</td></tr>
+    <tr><td>44</td><td>虚函数表指针:vptr@B</td></tr>
     <tr><td>48</td><td>a</td></tr>
     <tr><td>52</td><td>b</td></tr>
 <table>
