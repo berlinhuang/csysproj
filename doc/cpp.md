@@ -58,7 +58,7 @@
 
 ```
 
-### 
+### 对象内存布局
 
 > class obj
 <table>
@@ -74,9 +74,11 @@
 </table>
 
 <table>
-    <tr><td>成员函数: Point::point(float) float Point::x()</td></tr>
+    <tr><td>静态方法: static int Point::PointCount()</td></tr>
 </table>
 
 <table>
-    <tr><td>成员函数: Point::point(float) float Point::x()</td></tr>
+    <tr>
+        <td>成员函数:</br> Point::point(float) </br> float Point::x()</td>
+    </tr>
 </table>
