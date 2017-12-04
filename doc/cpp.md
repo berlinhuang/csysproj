@@ -1,3 +1,4 @@
+### 强制类型转换
 - static_cast<目标数据类型>(78.28)   80%用这个   只在编译时进行类型检查
 ```C++
     int n = static_cast<int>(18.98);//
@@ -46,12 +47,36 @@
     {
         Base *p = new Derived();//父类类型的指针 指向子类对象
         Derived *pd = dynamic_cast<Derived *> (p);
-        
+        Derived *pd1 = static_cast<Derived *>(P);  
         
         Base *p = new Base();//父类类型的指针 指向父类对象
-        Derived *pd = dynamic_cast<Derived *> (p);//子类Derived中包含父类Base中没有的数据和函数成员 它返回NULL 
+        Derived *pd = dynamic_cast<Derived *> (p);//子类Derived中包含父类Base中没有的数据和函数成员 它返回NULL
+        Derived *pd3 = static_cast<Derived *>(P);//在编译时不会报错，也可以返回一个子类对象指针（假想），但是这样是不安全的，在运行时可能会有问题
    
     }
     
 
 ```
+
+### 
+
+> class obj
+<table>
+    <tr><td>成员变量</td><td></td><td></td></tr>
+    <tr><td rowspan = "4">虚函数表指针 vptr </td><td rowspan = "4">虚拟表:vtbl</td><td> type_info</td></tr>
+    <tr><td>虚析构函数:virtual ~Point();</td></tr>
+    <tr><td>虚函数:virtual ostream& print( ostream &os ) const;</td></tr>
+</table>
+
+> class object外
+<table>
+    <tr><td>静态成员: static int Point::_point_count</td></tr>
+</table>
+
+<table>
+    <tr><td>成员函数: Point::point(float) float Point::x()</td></tr>
+</table>
+
+<table>
+    <tr><td>成员函数: Point::point(float) float Point::x()</td></tr>
+</table>
