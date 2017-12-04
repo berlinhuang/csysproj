@@ -59,8 +59,8 @@
 ```
 
 ### 对象内存布局
-
-> class obj
+> 简单对象模型
+-  class obj
 <table>
     <tr><td>成员变量</td><td></td><td></td></tr>
     <tr><td rowspan = "4">虚函数表指针 vptr </td><td rowspan = "4">虚拟表:vtbl</td><td> type_info</td></tr>
@@ -68,7 +68,7 @@
     <tr><td>虚函数:virtual ostream& print( ostream &os ) const;</td></tr>
 </table>
 
-> class object外
+-  class object外
 <table>
     <tr><td>静态成员: static int Point::_point_count</td></tr>
 </table>
@@ -82,3 +82,23 @@
         <td>成员函数:</br> Point::point(float) </br> float Point::x()</td>
     </tr>
 </table>
+
+> 带有虚函数的多重虚拟继承(对象模型)
+
+<table>
+    <tr><td>0</td><td rowspan = "4" >B1</td><td>虚函数表指针:vptr</td></tr>
+    <tr><td>4</td><td>虚基类指针:vbptr</td></tr>
+    <tr><td>8</td><td>a1</td></tr>
+    <tr><td>12</td><td>b1</td></tr>    
+    <tr><td>16</td><td rowspan = "4" >B2</td><td>虚函数表指针:vptr</td></tr>
+    <tr><td>20</td><td>虚基类指针:vbptr</td></tr>
+    <tr><td>24</td><td>a2</td></tr>
+    <tr><td>28</td><td>b2</td></tr>
+    <tr><td>32</td><td rowspan = "2" >D</td><td>ad</td></tr>
+    <tr><td>36</td><td>bd</td></tr>
+    <tr><td>40</td><td rowspan = "4" >B</td><td>vtordisp for vbase B</td></tr>
+    <tr><td>44</td><td>虚函数表指针:vptr</td></tr>
+    <tr><td>48</td><td>a</td></tr>
+    <tr><td>52</td><td>b</td></tr>
+<table>
+
