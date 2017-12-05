@@ -1,359 +1,123 @@
-### 强制类型转换
-- static_cast<目标数据类型>(78.28)   80%用这个   只在编译时进行类型检查
-```C++
-    int n = static_cast<int>(18.98);//
-    printf("\n%d",static_cast<int>(98.98));//
-     
-    int *p = static_cast<int*>(malloc(100));
-```
-- const_cast<int*>(p);//去掉常量属性     15%用这个
-```C++
-    int num[3] = {1,2,3};
-    const int *p = num;
-    std::cout<<*p<<*(p+1)<<*(p+2)<<std::endl;
-    int *pnew = const_cast<int*>(p);//去掉常量属性     15%用这个
-    *pnew = 100;
-```
-- reinterpret_cast<char*>(num);//专业转换指针  1%用这个
-```C++
-    float fl = 123.3231;
-    int num = 3;
-    char *p = reinterpret_cast<char*>(num);//专业转换指针  1%用这个
-```
+> volatile
+- 类型修饰符 这个关键字声明的变量，编译器对访问该变量的代码就不再进行优化，从而可以提供对特殊地址的稳定访问
+- 每次使用它的时候总是重新从它所在的内存读取数据.而不是优化做法(读寄存器的数据)
 
-- dynamic_cast 基类的指针或引用 安全的转换为派生类的指针或引用  运行时类型检查(RTTI Run-Time Type Identification)
+
+> static
+
+- static全局变量 
+    - 初始化在编译的时候进行。在main函数被调用之前初始化并且只初始化一次,防止在其他文件单元中被引用。
+    - 拥有文件作用域，只在声明的文件中有效，其他源文件中不可见。
+    - 生存期从main第一次执行,直到程序结束。
+    
+- static函数变量(static局部变量) 
+    - 在函数中有效，第一次进入函数初始化且只初始化一次，以后进入函数将沿用上一次的值
+    - 在{}中定义了static变量，其作用域为{}内，出了{}，程序会指示该的static变量未定义
+    - 生存期从main第一次执行,直到程序结束。
+    
+- static普通函数
+    - 用static修饰的函数，本限定在本源码文件中，不能被本源码文件以外的代码文件调用
+    - static函数在内存中只有一份，普通函数在每个被调用中维持一份拷贝
+    
+- static成员函数 
+    - static成员函数没有this形参，它可以直接访问所属类的static成员，但不能直接使用非static成员。
+    - 类的非static成员函数是可以直接访问类的static和非static成员，而不用作用域操作符。
+    
+- static成员变量
+    - 类内声明，类外定义
+    - 不通过类构造函数初始化，而是在定义时进行初始化
+    - 一个例外：初始化式为常量表达式，整型static const数据成员（static const int） 可以在类的定义体内进行初始化：
+      ```C++
+      class Lunais{
+        static const int zty = 30;
+      }
+      ```
+
+
+> extern
+
+- 传统的声明外部变量的功能: extern int a;仅仅是一个变量的声明，说明这个变量为外部变量，是在其他的c文件中定义的全局变量。而不是在定义变量a，并未为a分配内存空间。
 ```C++
-    // 原理: 将一个基类对象指针（或引用）cast （抛）到继承类指针，
-    // dynamic_cast 会根据基类指针是否真正指向继承类指针来做相应处理。//
-    
-    // 返回值: 对指针进行dynamic_cast，失败返回null，成功返回正常cast后的对象指针；
-    // 对引用进行dynamic_cast，失败抛出一个异常，成功返回正常cast后的对象引用。
-    
-    // 注意: dynamic_cast在将父类cast到子类时，父类必须要有虚函数
-    
-    // 对编译器的要求: dynamic_cast<> 会用到RTTI技术，因此需要启动“运行时类型信息”这一选项，而在VC.net 2003中默认是关闭的。
-    // 所以，需要人为的启动这一选项。否则编译器会警告
-    class Base
-    {
-        virtual void fun(){}
-    };
-    
-    class Derived:public Base
-    {
-    };
-   
-    
-    void func
-    {
-        Base *p = new Derived();//父类类型的指针 指向子类对象
-        Derived *pd = dynamic_cast<Derived *> (p);
-        Derived *pd1 = static_cast<Derived *>(P);  
-        
-        Base *p = new Base();//父类类型的指针 指向父类对象
-        Derived *pd = dynamic_cast<Derived *> (p);//子类Derived中包含父类Base中没有的数据和函数成员 它返回NULL
-        Derived *pd3 = static_cast<Derived *>(P);//在编译时不会报错，也可以返回一个子类对象指针（假想），但是这样是不安全的，在运行时可能会有问题
-   
+//对变量而言，想在本源文件中使用另一个源文件的变量，就需要在使用前用extern声明该变量，或者在头文件中用extern声明该变量；
+//对函数而言，想在本源文件中使用另一个源文件的函数，就需要在使用前用声明该函数，声明函数加不加extern都没关系，所以在头文件中函数可以不用加extern
+```
+- extern “C”是使C++能够调用C写的库文件的一个手段，如果要对编译器提示使用C的方式来处理函数的话，那么就要使用extern “C”来说明
+
+```C++
+    // 单一语句形式的链接指示符
+    extern "C" size_t strlen(const char *);
+    // 复合语句形式的链接指示符
+    extern "C" {
+        int strcmp( const char*, const char*);
+        char *strcat(char*, const char*);
     }
     
-
-```
-####  RTTI
-> 在C++环境中﹐头文件(header file)含有类之定义(class definition)亦即包含有关类的结构资料(representational information)。但是﹐这些资料只供编译器(compiler)使用﹐编译完毕后并未留下来﹐所以在执行时期(at run-time)﹐无法得知对象的类资料﹐包括类名称、数据成员名称与类型、函数名称与类型等等。例如﹐两个类Figure和Circle﹐其之间为继承关系。
-```C++
-    Figure *p; 
-    p = new Circle(); 
-    Figure &q = *p; 
-    // 在执行时﹐p指向一个对象﹐但欲得知此对象之类资料﹐就有困难了。同样欲得知q 所参考(reference) 对象的类资料﹐也无法得到。RTTI(Run-Time Type Identification)就是要解决这困难﹐也就是在执行时﹐您想知道指针所指到或参考到的对象类型时﹐该对象有能力来告诉您。随着应用场合之不同﹐所需支持的RTTI范围也不同。最单纯的RTTI包括﹕ 
-    //1类识别(class identification)──包括类名称或ID。 
-    //2继承关系(inheritance relationship)──支持执行时期的「往下变换类型」(downward casting)﹐亦即动态变换类型(dynamic casting) 。
-    
-    //在对象数据库存取上﹐还需要下述RTTI﹕ 
-    //1.对象结构(object layout) ──包括属性的类型、名称及其位置（position或offset）。
-    //2.成员函数表(table of functions)──包括函数的类型、名称、及其参数类型等。
-        //其目的是协助对象的I/O 和持久化(persistence) ﹐也提供调试讯息等。 
-        //若依照Bjarne Stroustrup 之建议〔注1 〕﹐C++ 还应包括更完整的RTTI﹕ 
-    //1.能得知类所实例化的各对象 。 
-    //2.能参考到函数的源代码。 
-    //3.能取得类的有关在线说明(on-line documentation) 。 
-        //其实这些都是C++ 编译完成时所丢弃的资料﹐如今只是希望寻找个途径来将之保留到执行期间。然而﹐要提供完整的RTTI﹐将会大幅提高C++ 的复杂度﹗
-```
-
-> RTTI(Run Time Type Identification):通过运行时类型识别，程序能够使用基类的指针或引用来检查着这些指针或引用所指的对象的实际派生类型。
-
-> RTTI提供了两个非常有用的操作符：typeid和dynamic_cast。
-- typeid操作符，返回指针和引用所指的实际类型；
-- dynamic_cast操作符，将基类类型的指针或引用安全地转换为其派生类类型的指针或引用。
-
-> 为了提供RTTI﹐C++ 就将在vptr中附加个指针﹐指向typeinfo对象
-- 由于该类所实例化之各对象﹐皆含有个指针指向vtbl虚函数表﹐因之各对象皆可取出typeinfo对象而得到RTTI
-
-> 编译器提供的RTTI执行过程
-```C++
-    Figure *f1 = new Square();  
-    Figure *f2 = new Square(); 
-    const typeinfo ty = typeid(*f2); 
-    其中﹐typeid(*f2) 的动作是﹕ 
-    1.取得f2所指之对象。 
-    2.从对象取出指向vptr指针﹐经由此指针取得vtbl表。 
-    3.从表中找出指向typeinfo对象之指针﹐经由此指针取得typeinfo对象。 
-    这typeinfo对象就含有RTTI了。经由f1及f2两指针皆可取得typeinfo对象﹐所以 typeid(*f2) == typeid(*f1)。
-```
-> 程序员自己提供的RTTI 
- - 通常程序员自己可提供简单的RTTI﹐例如提供类的名称或识别(TypeID)。最常见的方法是﹕为类体系定义些虚函数如Type_na() 及Isa() 函数等。
-```C++
-    class Figure { }; 
-    
-    class Rectangle : public Figure { }; 
-    
-    class Square : public Rectangle 
-    { 
-        int data; 
-    public: 
-        Square() { data=88; } 
-        void Display() { cout << data << endl; } 
-    }; 
-    
-    void main() 
-    { 
-        Figure *f = new Rectangle(); 
-        Square *s = (Square *)f; 
-        s -> Display(); 
-    } 
-    //这时s指向Rectangle之对象﹐而s->Display()呼叫Square::Display()﹐将找不到data值。若在执行时能利用RTTI来检查之﹐就可发出错误讯息。于是﹐自行加入RTTI功能﹕ 
-    class Figure 
-    { 
-    public: 
-        virtual char* Type_na() { return "Figure"; } 
-        virtual int Isa(char* cna) { return !strcmp(cna, "Figure")? 1:0; } 
-    }; 
-    
-    class Rectangle:public Figure 
-    { 
-    public: 
-        virtual char* Type_na() { return "Rectangle"; } 
-        virtual int Isa(char* cna)  { return !strcmp(cna, "Rectangle")?1 : Figure::Isa(cna); } 
-        static Rectangle* Dynamic_cast(Figure* fg) { return fg -> Isa(Type_na())?(Rectangle*)fg : 0; } 
-    }; 
-    
-    class Square:public Rectangle 
-    { 
-        int data; 
-    public: 
-        Square() { data=88; } 
-        virtual char* Type_na() { return "Square"; } 
-        virtual int Isa(char* cna) { return !strcmp(cna, "Rectangle")? 1 : Rectangle::Isa(cna); } 
-        static Square* Dynamic_cast(Figure *fg)  { return fg->Isa(Type_na())? (Square*)fg : 0; } 
-        void Display() { cout << "888" << endl; } 
-    }; 
-    // 虚函数Type_na()提供类名称之RTTI﹐而Isa()则提供继承之RTTI﹐用来支持「动态转类型」函数──Dynamic_cast()。例如﹕ 
-    
-    Figure *f = new Rectangle(); 
-    cout << f -> Isa("Square") << endl; 
-    cout << f -> Isa("Figure") << endl; 
-    // 这些指令可显示出﹕f 所指向之对象并非Square之对象﹐但是Figure之对象（含子孙对象）。再如﹕ 
-    Figure *f; Square *s; 
-    f = new Rectangle(); 
-    s = Square == Dynamic_cast(f); 
-    if(!s) 
-        cout << "dynamic_cast error!!" << endl; 
-    // 此时﹐依RTTI来判断出这转类型是不对的。 
-```
-### 对象内存布局
-#### 1. 简单对象模型
--  class obj
-<table>
-    <tr><td>成员变量</td><td></td><td></td></tr>
-    <tr><td rowspan = "4">虚函数表指针 vptr </td><td rowspan = "4">虚拟表:vtbl</td><td> type_info</td></tr>
-    <tr><td>虚析构函数:virtual ~Point();</td></tr>
-    <tr><td>虚函数:virtual ostream& print( ostream &os ) const;</td></tr>
-</table>
-
--  class object外
-<table>
-    <tr><td>静态成员: static int Point::_point_count</td></tr>
-</table>
-
-<table>
-    <tr><td>静态方法: static int Point::PointCount()</td></tr>
-</table>
-
-<table>
-    <tr>
-        <td>成员函数:</br> Point::point(float) </br> float Point::x()</td>
-    </tr>
-</table>
-
-#### 2. 带有虚函数的 重复继承(对象模型)
-
-
-```C++
-    class B
-    {
-    private:
-        int a;
-        char b;
-    public:
-        virtual void f(){}
-        
-        virtual void Bf(){}
-    }
-    
-    class B1: public B
-    {
-    private:
-        int a1;
-        char b1;
-    public:
-        virtual void f(){}
-        virtual void f1(){}
-        
-        virtual void Bf1(){}
-    }
-    
-    class B2: public B
-    {
-    private:
-        int a1;
-        char b1;
-    public:
-        virtual void f(){}
-        virtual void f2(){}
-        
-        virtual void Bf2(){}
-    }
-    
-    
-    class D:public B1, public B2
-    {
-    private:
-        int ad;
-        char bd;
-    public:
-        virtual void f(){}
-        
-        virtual void f1(){}
-        virtual void f2(){}
-        
-        virtual void Df(){}
+    extern "C"{
+        #include <string.h>
     }
 
 ```
 
-- vptr@B1:
-    - D::f//重写
-    - B::Bf
-    - D::f1//重写
-    - B1::Bf1
-    - D::Df
-    
-- vptr@B2:
-    - D::f//重写
-    - B::Bf
-    - D::f2//重写
-    - B2::Bf2
+> const
+- const限定符
+    - 因为const对象一旦创建后其值就不能再改变，所以const对象必须初始化
+    - 默认情况下const对象只在文件内有效，如果想在多个文件之间共享const对象，必须在变量的定义之前添加extern关键字
+    - const int i = 1;
 
-<table>
-    <tr><td>0</td><td rowspan = "5" >B1</td><td>虚函数表指针:vptr@B1</td></tr>
-    <tr><td>4</td><td>a</td></tr>
-    <tr><td>8</td><td>b</td></tr>
-    <tr><td>12</td><td>a1</td></tr>  
-    <tr><td>16</td><td>b1</td></tr>
-    <tr><td>20</td><td rowspan = "5" >B1</td><td>虚函数表指针:vptr@B2</td></tr>
-    <tr><td>24</td><td>a</td></tr>
-    <tr><td>28</td><td>b</td></tr>
-    <tr><td>32</td><td>a2</td></tr>  
-    <tr><td>36</td><td>b2</td></tr>  
-    <tr><td>40</td><td rowspan = "3" >B1</td><td>ad</td></tr>
-    <tr><td>44</td><td>bd</td></tr>
-</table>
-
-
-#### 3.带有虚函数的 多重虚拟继承(对象模型)
-
-- 多了vbptr来存储到公共基类的偏移
-
-
-```C++
-    class B
-    {
-    private:
-        int a;
-        char b;
-    public:
-        virtual void f(){}
-        
-        virtual void Bf(){}
-    }
-    
-    class B1:virtual public B
-    {
-    private:
-        int a1;
-        char b1;
-    public:
-        virtual void f(){}
-        virtual void f1(){}
-        
-        virtual void Bf1(){}
-    }
-    
-    class B2:virtual public B
-    {
-    private:
-        int a1;
-        char b1;
-    public:
-        virtual void f(){}
-        virtual void f2(){}
-        
-        virtual void Bf2(){}
-    }
+- 对const的引用/(reference to const)常量引用
+    - 把引用(常量引用)绑定到const对象上就像绑定到其他对象上一样,我们称之为对常量的引用(reference to const)
+    - 允许为一个常量引用绑定非常量的对象，字面值，甚至是个一般表达式
+    ```C++
+    double dval(3.14);
+    const int &ri(dval);
+    // 实际上编译器做了如下操作
+    const int temp = dval;
+    const int &ri = temp;
     
     
-    class D:public B1, public B2
-    {
-    private:
-        int ad;
-        char bd;
-    public:
-        virtual void f(){}
-        
-        virtual void f1(){}
-        virtual void f2(){}
-        
-        virtual void Df(){}
-    }
+    char str[10]("hello");
+    const char (&rstr)[10](str); //常量引用    用str初始化
+    str[4] = 'x';//ok
+    rstr[4] = 'y';//false
+    const char (&rrstr)[10](rstr);//引用可以给另一个引用初始化
+    
+    
+    int(*p)(int a, int b)(add);
+    std::cout<<p(1,2)<<std::endl;
+    int(*const&rp)(int a, int b)(p);//引用函数指针     限定了函数指针不被修改
+    rp = dec;//false  
+    
+    ```
+    
+- 指向常量的指针(pointer to constant)/底层const表示指针所指的对象是个常量: const int *a(param);
+    - 和引用一样，也可以让指针指向常量或非常量
+    - 不能用于改变其所指对象的值
+    - 要存放常量对象（const int i = 1）的地址，只能使用指向常量的指针(const int *p)
+    ```C++
+    char str[10]("hello");
+    const char *pc(str);//定义一个常量指针（百度百科）
+    
+    str[3] = 'x';//ok
+    
+    pc[3] = 'y';//false
+    *(pc+3) ='y';//false 错误
+    
+    pc = "world"//ok
+    ```
 
-```
-- vptr@B1
-    - D::f1()//重写
-    - B1::Bf1()
-    - D::Df()
+- 常量指针(const pointer)/顶层const表示指针本身是个常量:  
+    - 指针是对象而引用不是，因此就像其他对象类型一样，允许把指针本身定为常量
+    - 常量指针必须初始化，而且一旦初始化完成，则它的值（也就是存放在指针中的那个地址）就不能再改变了
+    - 把*放在const关键字之前用以说明 指针是一个常量
+    ```C++
+        int errNumb = 0;
+        int *const curErr = &errNumb;
+    ```
+    
+- 指向常量的指针常量
 
-- vptr@B2
-    - D:f2()//重写
-    - B2::Bf2()
+- const 引用作形参
 
-- vptr@B
-    - D::f()//重写
-    - B::f()
+- const 成员函数 
 
-<table>
-    <tr><td>0</td><td rowspan = "4" >B1</td><td>虚函数表指针:vptr@B1</td></tr>
-    <tr><td>4</td><td>虚基类指针:vbptr@B1</td></tr>
-    <tr><td>8</td><td>a1</td></tr>
-    <tr><td>12</td><td>b1</td></tr>    
-    <tr><td>16</td><td rowspan = "4" >B2</td><td>虚函数表指针:vptr@B2</td></tr>
-    <tr><td>20</td><td>虚基类指针:vbptr@B2</td></tr>
-    <tr><td>24</td><td>a2</td></tr>
-    <tr><td>28</td><td>b2</td></tr>
-    <tr><td>32</td><td rowspan = "2" >D</td><td>ad</td></tr>
-    <tr><td>36</td><td>bd</td></tr>
-    <tr><td>40</td><td rowspan = "4" >B</td><td>vtordisp for vbase B</td></tr>
-    <tr><td>44</td><td>虚函数表指针:vptr@B</td></tr>
-    <tr><td>48</td><td>a</td></tr>
-    <tr><td>52</td><td>b</td></tr>
-<table>
-
-
-
+- const 成员变量
