@@ -226,14 +226,12 @@ static ssize_t my_read(int fd, char *ptr)
 ssize_t Readline(int fd, void *vptr, size_t maxlen)
 {
     ssize_t n, rc;
-    char
-            c, *ptr;
+    char c, *ptr;
     ptr = vptr;
     for (n = 1; n < maxlen; n++) {
         if ( (rc = my_read(fd, &c)) == 1) {
             *ptr++ = c;
-            if (c
-                == '\n')
+            if (c == '\n')
                 break;
         } else if (rc == 0) {
             *ptr = 0;
