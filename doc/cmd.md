@@ -34,11 +34,19 @@
 - \-c 每隔一个固定时间，执行该netstat命令。
 - 提示：LISTEN和LISTENING的状态只有用-a或者-l才能看到
 > netstat -ano   
+- 网络套接字
 
 | Proto |Recv-Q| Send-Q| Local Address |  Foreign Address  | State |  Timer       |
 | :-----|:----:| -----:|:-------------:| -----------------:|:-----:| ------------:|
 | tcp   |    0 |   0   |127.0.0.1:6942 |     0.0.0.0:*     | LISTEN|关闭 (0.00/0/0)|
 | udp   |    0 |   0   |0.0.0.0:41961  |     0.0.0.0:*     |       |关闭 (0.00/0/0)|
+
+- Unix域套接字
+
+| Proto |Refcnt| Flags | type    |  state     | I-Node |  Path       |
+| :-----|:----:| -----:|:-------:| ----------:|:-----:| ------------:|
+| unix  |  2   |[ACC]  | 流      |  listening | 19793|@/tmp/.ICE-unix/1566|
+| unix  |  2   |[]     | 数据报   |           | 19343|/run/user/1000/systemd/notify|
 
 > netstat -tulp
 
