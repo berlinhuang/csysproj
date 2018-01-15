@@ -208,7 +208,8 @@
 - ps -aux --sort -pmem | less //根据 内存使用 来升序排序
 - ps -C getty     //使用 -C 参数，后面跟你要找的进程的名字    
 - ps -L 1213     //特定进程的线程，可以使用-L 参数，后面加上特定的PID 
-  
+- ps -eLf | grep "..." // 查看线程
+
 <h4 id='5.2'> 5.2 top </h4>
 
 > top [-d 数字] | top [-bnp]   
