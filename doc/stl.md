@@ -1,7 +1,7 @@
 
 > array 静态数组
 
-### Sequence Containers
+### Sequence Containers 序列式(顺序)容器 (可序 未必有序)
 > 1. vector 动态数组 
 ```C++
     template < class T,
@@ -206,8 +206,15 @@
 ---
 
 
-### Associative Containers
+### Associative Containers 关联式容器
+> BST(binary search tree)
 
+> 平衡二叉树(balanced binary tree)
+- AVL-tree
+- RB-tree
+- AA-tree
+
+> 关联式容器内部结构: RB-Tree or hash-table
 
 > RB-tree
 
@@ -294,3 +301,4 @@
     }
     
 ```
+### functor 
