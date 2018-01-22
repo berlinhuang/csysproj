@@ -38,14 +38,14 @@
     }
     
 ```
-(2). queue 单线队列
+(2). queue 单向队列
 ```C++
     template < class T,
-               class Sequence = deque<T> >以list作为dueue的底层容器
+               class Sequence = deque<T> >以dueue(双端队列)作为queue的底层容器
     class queue{
     }
     
-    queue<int, list<int> > iqueue;//以list作为queue的底层容器
+    queue<int, list<int> > iqueue;//以list(环形双向链表)作为queue的底层容器
     
 ```
 
