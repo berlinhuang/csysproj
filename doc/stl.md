@@ -41,7 +41,7 @@
 (2). queue 单向队列
 ```C++
     template < class T,
-               class Sequence = deque<T> >以dueue(双端队列)作为queue的底层容器
+               class Sequence = deque<T> >以deque(双端队列)作为queue的底层容器
     class queue{
     }
     
@@ -53,18 +53,19 @@
 
 (1). priority_queue 优先级队列
 ```C++
-    <queue>
     template <  class T, 
-                class Sequence = vector<T>,//容纳优先队列的容器 也可以是dequeue
+                class Sequence = vector<T>,//容纳优先队列的容器 也可以是deque
                 class Compare = less<typename Sequence::value_type> >//从小到大
     class priority_queue{
-    
+        public:
+            typedef typename Sequence::value_type value_type;
+            //....
+        protected:
+            Sequence c;//vector
+            //....
     }
     
-    
     priority_queue< int, vector<int>, greater<int> > p;// 从大到小
-    
-    
 ```
 - 底部以vector作为容器
 ```C++
