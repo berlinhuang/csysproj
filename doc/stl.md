@@ -2,7 +2,7 @@
 > array 静态数组
 
 ### Sequence Containers
-> vector 动态数组 
+> 1. vector 动态数组 
 ```C++
     template < class T,
                class Alloc = alloc > // 缺省使用alloc作为适配器
@@ -12,7 +12,7 @@
 ```
 - 以原大小两倍空间增长，将旧数据复制过来，再添加新数据
 
-> list 环形双向链表  
+> 2. list 环形双向链表  
 ```C++
     template < class T,
                class Alloc = alloc > // 缺 省使用alloc作为适配器
@@ -20,10 +20,17 @@
     }
     
 ```
-> deque 双端队列 
+> 3. deque 双端队列 
+```C++
+    template < class T,
+               class Alloc = alloc,
+               size_t BufSiz = 0 >
+    class deque{
+    }
+```
 - 分段连续空间链接而成
 
-1. stack 栈 
+(1). stack 栈 
 ```C++
     template < class T,
                class Sequence = deque<T> >
@@ -31,7 +38,7 @@
     }
     
 ```
-2. queue 单线队列
+(2). queue 单线队列
 ```C++
     template < class T,
                class Sequence = deque<T> >以list作为dueue的底层容器
@@ -42,9 +49,9 @@
     
 ```
 
-> heap 堆 
+> 4. heap 堆 
 
-1. priority_queue 优先级队列
+(1). priority_queue 优先级队列
 ```C++
     <queue>
     template <  class T, 
@@ -223,7 +230,24 @@
     
 ```
 3. multiset
+```C++
+    template < class Key,
+               class Compare = less<Key>, //从小到大
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class multiset{
+    }
+    
+```
 4. multimap
+```C++
+    template < class Key,
+               class T,
+               class Compare = less<Key>, //从小到大
+               class Alloc = alloc > // 缺省使用alloc作为适配器
+    class multimap{
+    }
+    
+```
 
 > hashtable
 
