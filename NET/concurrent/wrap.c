@@ -3,13 +3,7 @@
 //
 
 /* wrap.c */
-#include <stdlib.h>
-#include <errno.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <unistd.h>
-
-#include <sys/epoll.h>
+#include "wrap.h"
 
 void perr_exit(const char *s)
 {

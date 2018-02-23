@@ -10,12 +10,15 @@
 #include <pthread.h>
 #include "./../wrap.h"
 #include <ctype.h>
+
 #define MAXLINE 80
 #define SERV_PORT 8000
+
 struct s_info {//客户端缓冲
     struct sockaddr_in cliaddr;
     int connfd;
 };
+
 void *do_work(void *arg)
 {
     int n,i;
@@ -39,6 +42,8 @@ void *do_work(void *arg)
     }
     Close(ts->connfd);
 }
+
+
 int main(void)
 {
     struct sockaddr_in servaddr, cliaddr;

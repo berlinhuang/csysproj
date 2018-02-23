@@ -1,3 +1,3 @@
+add_subdirectory(search)
 add_subdirectory(sort)
-
-add_executable(BinTree BinTree.c)
+add_subdirectory(tree)

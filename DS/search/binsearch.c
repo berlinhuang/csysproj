@@ -19,7 +19,7 @@ int main()
     {
         st.elem[i].key = a[i-1];//RNode[0] 当成观察哨
     }
-    printf("%d",SqSearch(st,77));
+    printf("%d",BinSearch(st,77));
 
     return 0;
 }

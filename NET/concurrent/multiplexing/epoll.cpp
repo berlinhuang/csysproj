@@ -77,7 +77,7 @@ int main (int argc, char* argv[])
         int ret = epoll_wait(epollfd, events, MAX_SOCKET_NUMBERS, -1);                  //epoll_wait
         if(ret < 0)
         {
-            printf_f("epoll wait error\r\n");
+            printf("epoll wait error\r\n");
             exit(1);
         }
         lt(events, ret, epollfd, listenfd);
@@ -107,7 +107,7 @@ void addfd(int epollfd,int fd, int flag)
     {
         event.events |= EPOLLET;// level trigger
     }
-    epoll_ctl(epollfd, EPOLL_CTL_ADD,NULL,&event);//
+    epoll_ctl(epollfd, EPOLL_CTL_ADD,fd,&event);//
     setnonblocking(fd);//设置成非阻塞，不然阻塞模式accept会出现问题
 }
 
@@ -186,7 +186,7 @@ void et( struct epoll_event* events, int number, int epollfd, int listenfd)
                 }
                 else if(ret == 0)
                 {
-                    res = epoll_ctl(efd,EPOLL_CTL_DEL, sockfd, NULL);
+                    int res = epoll_ctl(epollfd, EPOLL_CTL_DEL, sockfd, NULL);
                     close(sockfd);
                 }
                 else

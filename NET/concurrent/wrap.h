@@ -5,6 +5,14 @@
 #ifndef CSYSPROJ_WRAP_H
 #define CSYSPROJ_WRAP_H
 
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/epoll.h>
+
+
 void perr_exit(const char *s);
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);
 void Bind(int fd, const struct sockaddr *sa, socklen_t salen);

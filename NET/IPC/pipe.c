@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #define MAXLINE 80
 int main(void)
 {

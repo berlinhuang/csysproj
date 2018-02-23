@@ -1,6 +1,10 @@
 # csysproj
 > This repo describes the sys programming in linux using C language
-## concurrent (处理并发的模型)
+
+
+## NET
+
+### concurrent (处理并发的模型)
 
 - multiprocess (多进程处理并发)
     > pid = fork()
@@ -13,19 +17,6 @@
     3. epoll    epoll是通过链表和红黑树来实现的
 > 每个进程/线程处理一个连接, 由于申请进程/线程会占用相当可观的系统资源，同时对于多进程/线程的管理会对系统造成压力，因此这种方案不具备良好的可扩展性
 
-## Thread Synchronization (线程间同步)
-> 每个进程中访问临界资源的那段代码称为[临界区]（Critical Section）
-
-> [临界资源]是一次仅允许一个进程使用的共享资源
-
-> 多线程访问共享的资源会产生竞争，所以要进行同步(线程排队)
-
-> 多个线程读取常量不用同步，读取变量才要同步，即涉及线程要要对数据修改才同步
-- compete   竞争 
-    1. mutex     互斥量     加锁原语
-    2. condition 条件变量    同步原语
-    3. semaphore 信号量
-    4. rwlock 
 
 
 ## IPC（进程间通信）
@@ -43,9 +34,27 @@
         > server: socket() bind() listen() accept()...
         
         > client: socket() connect() ...
-## sort
+
+## OS
+### Thread Synchronization (线程间同步)
+> 每个进程中访问临界资源的那段代码称为[临界区]（Critical Section）
+
+> [临界资源]是一次仅允许一个进程使用的共享资源
+
+> 多线程访问共享的资源会产生竞争，所以要进行同步(线程排队)
+
+> 多个线程读取常量不用同步，读取变量才要同步，即涉及线程要要对数据修改才同步
+- compete   竞争 
+    1. mutex     互斥量     加锁原语
+    2. condition 条件变量    同步原语
+    3. semaphore 信号量
+    4. rwlock 
     
-## search
+
+## DS
+### sort
+    
+### search
 
 ---
 

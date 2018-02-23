@@ -56,24 +56,7 @@
 //}
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#define MAXNODE 100
-
-//二叉链表的存储结构
-typedef char datatype;
-typedef struct node
-{
-    datatype data;
-    struct node *lchild,*rchild;
-} BinNode,*BinTree;
-
-//定义栈的存储结构
-typedef struct
-{
-    BinTree link;
-    int flag;
-}StackType;
+#include "BinTree.h"
 
 //先序遍历输入二叉树
 void CreateBinTree(BinTree *t)
@@ -221,21 +204,25 @@ void NRInOrder(BinTree bt)
 
 
 //非递归后序遍历二叉树
-void NRPostOrder(BinTree bt) {
+void NRPostOrder(BinTree bt)
+{
     StackType stack[MAXNODE];
     BinTree p;
     int top, sign;
     if (bt == NULL) return;
     top = -1;//栈顶位置初始化
     p = bt;
-    while (!(p == NULL && top == -1)) {
+    while (!(p == NULL && top == -1))
+    {
         if (p != NULL)//结点第一次进栈
         {
             top++;
             stack[top].link = p;
             stack[top].flag = 1;
             p = p->lchild;//找出结点的左孩子
-        } else {
+        }
+        else
+        {
             p = stack[top].link;
             sign = stack[top].flag;
             top--;
@@ -245,7 +232,9 @@ void NRPostOrder(BinTree bt) {
                 stack[top].link = p;
                 stack[top].flag = 2;//标记第二次出栈
                 p = p->rchild;
-            } else {
+            }
+            else
+            {
                 printf("%c", p->data);//访问节点的数据域
                 p = NULL;
             }
@@ -315,31 +304,4 @@ void AoRuFa(BinTree bt,int L)
     printf("\n");
     AoRuFa(bt->lchild,L+1);
     AoRuFa(bt->rchild,L+1);
-}
-//主函数
-
-int main()
-{
-    BinTree bt;
-    printf("输入一串字符\n");
-    CreateBinTree(&bt);
-    printf("先序遍历\n");
-    PreOrder(bt);
-    printf("\n中序遍历\n");
-    InOrder(bt);
-    printf("\n后序遍历\n");
-    PostOrder(bt);
-    printf("\n凹入法输出二叉树：\n");
-    AoRuFa(bt,0);
-    printf("\n非递归先序遍历:\n");
-    NRPreOrder(bt);
-    printf("\n非递归中序遍历:\n");
-    NRInOrder(bt);
-    printf("\n非递归后序遍历:\n");
-    NRPostOrder(bt);
-    printf("\n层次遍历\n");
-    LevelOrder(bt);
-    printf("\n叶子数为%d\n",countleaf2(bt));
-    printf("\n深度为%d\n",Depth(bt));
-    return 0;
 }

@@ -4,8 +4,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <pthread.h>
+
 int counter;
 pthread_rwlock_t rwlock;
+
 //3个线程不定时写同一全局资源,5个线程不定时读同一全局资源
 void *th_write(void *arg)
 {
@@ -14,11 +16,13 @@ void *th_write(void *arg)
         pthread_rwlock_wrlock(&rwlock);
         t = counter;
         usleep(100);
-        printf("write %x : counter=%d\n",(int)pthread_self(), t, ++counter);
+        printf("write %x : counter=%d,++counter=%d\\n\n",(int)pthread_self(), t, ++counter);
         pthread_rwlock_unlock(&rwlock);
         usleep(100);
     }
 }
+
+
 void *th_read(void *arg)
 {
     while (1) {
@@ -28,6 +32,8 @@ void *th_read(void *arg)
         usleep(100);
     }
 }
+
+
 int main(void)
 {
     int i;
