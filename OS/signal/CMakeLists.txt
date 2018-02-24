@@ -1,0 +1,1 @@
+add_executable(signal_sigchld sigchld.c)

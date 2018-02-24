@@ -1,14 +1,14 @@
-add_executable(compete compete.c)
-target_link_libraries(compete pthread)
+add_executable(sync_compete compete.c)
+target_link_libraries(sync_compete pthread)
 
-add_executable(mutex mutex.c)
-target_link_libraries(mutex pthread)
+add_executable(sync_mutex mutex.c)
+target_link_libraries(sync_mutex pthread)
 
-add_executable(condition condition.c)
-target_link_libraries(condition pthread)
+add_executable(sync_condition condition.c)
+target_link_libraries(sync_condition pthread)
 
-add_executable(rwlock rwlock.c)
-target_link_libraries(rwlock pthread)
+add_executable(sync_rwlock rwlock.c)
+target_link_libraries(sync_rwlock pthread)
 
-add_executable(semaphore semaphore.c)
-target_link_libraries(semaphore pthread)
+add_executable(sync_semaphore semaphore.c)
+target_link_libraries(sync_semaphore pthread)
