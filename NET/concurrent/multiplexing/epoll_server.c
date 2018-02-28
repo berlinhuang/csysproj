@@ -17,9 +17,13 @@
 /**
  *
 #include <sys/epoll.h>
-int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)
 
-epfd：为epoll_creat的句柄
+int epoll_ctl(
+ int epfd,   //为epoll_creat的句柄
+ int op,     //表示动作，用3个宏来表示：
+ int fd,     //
+ struct epoll_event *event   //告诉内核需要监听的事件
+ )
 
 op：表示动作，用3个宏来表示：
     EPOLL_CTL_ADD(注册新的fd到epfd)，
@@ -31,21 +35,24 @@ event：告诉内核需要监听的事件
         uint32_t events; // Epoll events
         epoll_data_t data; // User data variable
     };
-        EPOLLIN ：表示对应的文件描述符可以读（包括对端SOCKET正常关闭）
-        EPOLLOUT：表示对应的文件描述符可以写
-        EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）
-        EPOLLERR：表示对应的文件描述符发生错误
-        EPOLLHUP：表示对应的文件描述符被挂断；
-        EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的
-        EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里
+    EPOLLIN ：表示对应的文件描述符可以读（包括对端SOCKET正常关闭）
+    EPOLLOUT：表示对应的文件描述符可以写
+    EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）
+    EPOLLERR：表示对应的文件描述符发生错误
+    EPOLLHUP：表示对应的文件描述符被挂断；
+    EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的
+    EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里
 
-        typedef union epoll_data
-        {
-            void* ptr;
-            int fd;
-            uint32_t u32;
-            uint64_t u64;
-        }epoll_data_t;
+    typedef union epoll_data
+    {
+        void* ptr;
+        int fd;
+        uint32_t u32;
+        uint64_t u64;
+    }epoll_data_t;
+
+
+
 
 
 #include <sys/epoll.h>
@@ -71,7 +78,7 @@ int epoll_wait(
 
 ------------------------------------------------------
 
-☆4个特有优点:
+☆☆☆☆4个特有优点:
 
  1. 连接数量: 虽然连接数有上限，但是很大，1G内存的机器上可以打开10万左右的连接，2G内存的机器可以打开20万左右的连接
  2. 消息传递: 在前面说到的复制问题上，epoll使用mmap减少复制开销。(epoll通过内核和用户空间共享一块内存来实现的)
@@ -82,9 +89,9 @@ int epoll_wait(
 
 ------------------------------------------------------
 
-☆过程(使用一组函数来完成任务，而不是单个函数):
+☆☆☆☆过程(使用一组函数来完成任务，而不是单个函数):
 
- 1. 执行epoll_create时，创建了红黑树(存储所监控的文件描述符的节点数据)  和 就绪链表(存储就绪的文件描述符的节点数据)
+ 1. 执行epoll_create时，创建了红黑树(事件表)(存储所监控的文件描述符的节点数据)  和 就绪链表(双向链表)(存储就绪的文件描述符的节点数据)
 
  2. 执行epoll_ctl时(查找、插入、删除), 红黑树上添加新的描述符           socket上有数据到了，内核在把网卡上的数据copy到内核中，后就来把socket插入到准备就绪链表里
  (1) 如果有，则立即返回。
@@ -96,17 +103,25 @@ int epoll_wait(
  不用重复传递。我们调用epoll_wait时就相当于以往调用select/poll，但是这时却不用传递socket句柄给内核，因为内核已经在epoll_ctl中拿到了要监控的句柄列表。\
 
 ------------------------------------------------------
-☆用程序索引就绪文件描述符的时间复杂度:
+☆☆☆☆用程序索引就绪文件描述符的时间复杂度:
 
  1. 由于每次select和poll调用都返回整个用户注册的事件集合（其中包括就绪的和未就绪的），所以应用程序索引就绪文件描述符的时间复杂度为O(n)
  2. epoll应用程序索引就绪文件描述符的时间复杂度为O(1)
 
 
-☆内核实现和工作效率:
+☆☆☆☆内核实现和工作效率:
 
  1. select 轮询方式检测就绪事件，O(n)
  2. poll 轮询方式检测就绪事件，O(n)
  3. epoll 采用回调方式检测就绪事件，O(1)
+------------------------------------------------------
+
+☆☆☆☆epoll() 系统调用 可以监听百万级的tcp连接:
+
+1. epoll 是由一组函数来完成任务，而不是单个函数
+2. epoll 把用户关心的文件描述符的事件 放到内核的事件表中，从而不用像select和poll那样每次调用都要重复传入文件描述符集合或者事件集合  从用户态到内核态的出入非常耗时
+3. epoll 只要使用一个额外的文件描述符，来唯一标识内核中的这个事件表
+
 ------------------------------------------------------
 
 内核通过管理一个事件表直接管理用户感兴趣的所有事件。每次调用epoll_wait的时候无需反复传入用户感兴趣事件。epoll_wait系统调用参数events仅仅用来反馈就绪的事件
