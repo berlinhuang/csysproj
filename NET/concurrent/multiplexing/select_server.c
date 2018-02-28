@@ -8,23 +8,40 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
-nfds:        监控的文件描述符集里最大文件描述符加1，因为此参数会告诉内核检测前多少个文件描述符的状态
-readfds：    监控有读数据到达文件描述符集合，传入传出参数
-writefds：   监控写数据到达文件描述符集合，传入传出参数
-exceptfds：  监控异常发生达文件描述符集合,如带外数据到达异常，传入传出参数
-timeout：    定时阻塞监控时间，3种情况
-                1.NULL，永远等下去
-                2.设置timeval，等待固定时间
-                3.设置timeval里时间均为0，检查描述字后立即返回，轮询
+int select(
+ int nfds,              // 监控的文件描述符集里最大文件描述符加1，因为此参数会告诉内核检测前多少个文件描述符的状态
+ fd_set *readfds,       // 监控有读数据到达文件描述符集合，传入传出参数
+ fd_set *writefds,      // 监控写数据到达文件描述符集合，传入传出参数
+ fd_set *exceptfds,     // 监控异常发生达文件描述符集合,如带外数据到达异常，传入传出参数
+ struct timeval *timeout // 定时阻塞监控时间，3种情况
+ );
+
+timeout： 定时阻塞监控时间，3种情况
+    1.NULL，永远等下去
+    2.设置timeval，等待固定时间
+    3.设置timeval里时间均为0，检查描述字后立即返回，轮询
+
 struct timeval {
     long tv_sec; // seconds
     long tv_usec; // microseconds
 };
 
-int FD_ISSET(int fd, fd_set *set); 测试文件描述符集合里fd是否置1
-void FD_SET(int fd, fd_set *set); 把文件描述符集合里fd位置1
-void FD_ZERO(fd_set *set); 把文件描述符集合里所有位清0
+int FD_ISSET(int fd, fd_set *set);  测试文件描述符集合里fd是否置1
+void FD_SET(int fd, fd_set *set);   把文件描述符集合里fd位置1
+void FD_ZERO(fd_set *set);          把文件描述符集合里所有位清0
+
+------------------------------------------------------
+
+特点:
+
+1 单个进程可监视的fd数量被限制     (单个进程所能打开的最大连接数有FD_SETSIZE宏定义，其大小是32个整数的大小)
+2 需要维护一个用来存放大量fd的数据结构，这样会使得用户空间和内核空间在传递该结构时复制开销大
+3 对socket进行扫描时是线性扫描
+
+------------------------------------------------------
+
+ 通过3个参数分别传入感兴趣的可读、可写、异常等事件，内核通过对这些参数的在校修改反馈其中的就绪事件。每次调用selecet都要重置这3个参数
+
 
 **/
 

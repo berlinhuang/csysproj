@@ -6,33 +6,51 @@
 
 /**
 #include <poll.h>
-int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+int poll(
+ struct pollfd *fds,
+ nfds_t nfds,  // 监控数组中有多少文件描述符需要被监控
+ int timeout   // 毫秒级等待
+ );
 
 struct pollfd {
     int fd;         // 文件描述符
     short events;   // 监控的事件
     short revents;  // 监控事件中满足条件返回的事件
 };
-        POLLIN普通或带外优先数据可读,即POLLRDNORM | POLLRDBAND
-        POLLRDNORM-数据可读
-        POLLRDBAND-优先级带数据可读
-        POLLPRI 高优先级可读数据
 
-        POLLOUT普通或带外数据可写
-        POLLWRNORM-数据可写
-        POLLWRBAND-优先级带数据可写
+POLLIN普通或带外优先数据可读,即POLLRDNORM | POLLRDBAND
+POLLRDNORM-数据可读
+POLLRDBAND-优先级带数据可读
+POLLPRI 高优先级可读数据
 
-        POLLERR 发生错误
-        POLLHUP 发生挂起
-        POLLNVAL 描述字不是一个打开的文件
+POLLOUT普通或带外数据可写
+POLLWRNORM-数据可写
+POLLWRBAND-优先级带数据可写
 
-nfds 监控数组中有多少文件描述符需要被监控
+POLLERR 发生错误
+POLLHUP 发生挂起
+POLLNVAL 描述字不是一个打开的文件
+
 
 timeout 毫秒级等待
 
 -1：阻塞等，#define INFTIM -1 Linux中没有定义此宏
 0：立即返回，不阻塞进程
 >0：等待指定毫秒数，如当前系统时间精度不够毫秒，向上取值
+
+
+------------------------------------------------------
+
+特点:
+
+ 1. 它没有最大连接数的限制，原因是它是基于链表来存储的( 区别于 select )
+ 2. 大量的fd的数组被整体复制于用户态和内核地址空间之间，而不管这样的复制是不是有意义
+ 3. poll还有一个特点是“水平触发”，如果报告了fd后，没有被处理，那么下次poll时会再次报告该fd
+
+------------------------------------------------------
+
+统一处理所有事件类型，只需传入一个事件集合参数。再通过pollfd.events传入感兴趣事件，内核通过修改pollfd.revents反馈其中就绪事件
+
  */
 
 
