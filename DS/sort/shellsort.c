@@ -12,7 +12,7 @@
 int main()
 {
     RecNode RNode[10];
-    KeyType a[] ={12,3,1,20};
+    KeyType a[] ={12,7,1,20,5,6,3,2,40,39};
 //    printf("%ld",sizeof(a)/sizeof(a[0]));
 //    printf("%ld",sizeof(RNode)/ sizeof(RNode[0]));
     int i ;

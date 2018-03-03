@@ -12,3 +12,11 @@
     <tr><td>heapsort</td><td>O(N*log2N)</td><td>O(N*log2N)</td><td>O(N*log2N)</td><td>O(1)</td><td>N</td></tr>
     <tr><td colspan = "2" align = "center">merge</td><td>O(N*log2N)</td><td>O(N*log2N)</td><td>O(N*log2N)</td><td>O(n)</td><td>Y</td></tr>
 </table>
+
+
+
+> QuickSort
+- 就空间复杂度来说，主要是递归造成的栈空间的使用，由数学归纳法可证明，其数量级为O(nlogn)，
+- 最好情况，递归树的深度为log2n，其空间复杂度也就为O(logn)，
+- 最坏情况，需要进行n‐1递归调用，其空间复杂度为O(n)，
+- 平均情况，空间复杂度也为O(logn)

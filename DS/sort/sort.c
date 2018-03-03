@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-void InsertSort(RecNode r[], int n)
+void InsertSort(RecNode r[], int n)  //stable
 {
     int  i,j;
     for(i=2;i<=n;i++)
@@ -41,26 +41,30 @@ void BinInseSort(RecNode r[], int n)
 }
 
 
-//希尔排序（最小增量排序）
-void ShellSort(RecNode r[], int n)
+//希尔排序（缩小增量排序）
+void ShellSort(RecNode r[], int n)   // no stable
 {
+    printf("-----------------------total element=%d\n",n);
     int i,j, dk;//dk记录前后位置的增量
-    int b = 0;
     int t = 0;
     dk = n/2;
     while(dk>0)//一趟增量为dk的插入排序
     {
+        printf("-----------------------dk=%d\n",dk);
         for(i = dk+1;i<=n;++i)
+        {
+            printf("---------------i=%d\n",i);
             if(r[i].key < r[i-dk].key)//将r[i]插入有序增量子表
             {
-                r[0]=r[i];//r[0]为暂存单元
-                for(j=i-dk; j>0 && r[0].key<r[j].key; j-=dk)
+                r[0]=r[i];//r[0]为暂存单元(    a.......b.......   //r[0] = r[b])     ***************
+                for(j=i-dk;         j>0 && r[0].key<r[j].key;        j-=dk)
                 {
-                    r[j+dk] = r[j];//记录后移，查找插入位置
-                    b++;
+                    printf("--insert j=%d\n",j);
+                    r[j+dk] = r[j];//记录后移，查找插入位置     //r[b] = r[a]     ***************
                 }
-                r[j+dk]=r[0];
+                r[j+dk]=r[0];//r[a] = r[b]   cause j-=dk      ***************
             }
+        }
         dk=dk/2;//增量改为原来的一半
         t++;
     }
@@ -69,9 +73,9 @@ void ShellSort(RecNode r[], int n)
 
 
 ///////////////////////////////////////////////////////////////////////////////////
+//swap sort
 
-
-void BubbleSort( RecNode r[], int n)
+void BubbleSort( RecNode r[], int n)  //stable
 {
     int i,j;
     int swap;
@@ -123,7 +127,7 @@ int Partition(RecNode r[], int low, int high )
     return low;
 }
 
-void QuickSort( RecNode r[], int m, int n)
+void QuickSort( RecNode r[], int m, int n)   //no stable
 {
     int i;
     if(m<n)
