@@ -2,7 +2,7 @@
 // Created by root on 17-11-19.
 //
 
-#include "INTV.h"
+#include "linklist.h"
 #include <stdio.h>
 #include <malloc.h>
 #include <ctype.h>
@@ -251,7 +251,7 @@ void reverse2(LinkList *H)
     }
 }
 
-//升序序链表合并为升序
+//带头结点的 升序序链表合并为升序
 LinkList MergerLinkList(LinkList La,LinkList Lb)
 {
     LNode*pa,*pb,*pc,*Lc ;
