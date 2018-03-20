@@ -230,7 +230,7 @@
 
 ---
 <h3 id = "6"> 6. sed awk </h3>  
-<h4 id='6.1'> 6.1 sed </h4>
+<h4 id='6.1'> 6.1 sed (stream editor) </h4> 
 
 > sed [-nefr] [动作]
 
@@ -293,6 +293,7 @@
 
 <h4 id='6.2'> 6.2 awk </h4>
 
+- awk其名称得自于它的创始人 Alfred Aho 、Peter Weinberger 和 Brian Kernighan 姓氏的首个字母
 > awk '条件类型1{动作1} 条件类型2{动作2} ...' filename
 -  awk 的内建变量
     - NF	每一行($0)拥有的栏位总数
@@ -305,7 +306,7 @@
     - <=	小於或等於
     - ==	等於
     - !=	不等於
-
+- -F参数：指定分隔符，可指定一个或多个
 
 > 用 last 可以将登陆者的数据取出来
 - last -n 5
@@ -318,9 +319,10 @@
 
 > 要查阅第三栏小於10以下的数据，并且仅列出帐号与第三栏 仅能在第二行后才开始生效
 - cat /etc/passwd | awk '{FS=":"} $3 < 10 {print $1 "\t " $3}'
-> Begin 在第1行开始生效
+>  awk 在开始处理输入文件之前会执行 BEGIN 块
 - cat /etc/passwd | awk 'BEGIN {FS=":"} $3 < 10 {print $1 "\t " $3}'
-
+> awk 在处理了输入文件中的所有行之后执行END块
+- awk '{count++;print $0;} END{print "user count is ",count}' /etc/passwd
 
 
 <h4 id='6.3'> 6.3 正规表达式 </h4>
