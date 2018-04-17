@@ -137,7 +137,7 @@
         virtual void f(){}
         
         virtual void Bf(){}
-    }
+    };
     
     class B1: public B
     {
@@ -149,7 +149,7 @@
         virtual void f1(){}
         
         virtual void Bf1(){}
-    }
+    };
     
     class B2: public B
     {
@@ -161,7 +161,7 @@
         virtual void f2(){}
         
         virtual void Bf2(){}
-    }
+    };
     
     
     class D:public B1, public B2
@@ -176,7 +176,7 @@
         virtual void f2(){}
         
         virtual void Df(){}
-    }
+    };
 
 ```
 
@@ -194,18 +194,18 @@
     - B2::Bf2
 
 <table>
-    <tr><td>0</td><td rowspan = "5" >B1</td><td>虚函数表指针:vptr@B1</td></tr>
-    <tr><td>4</td><td>a</td></tr>
-    <tr><td>8</td><td>b</td></tr>
-    <tr><td>12</td><td>a1</td></tr>  
-    <tr><td>16</td><td>b1</td></tr>
-    <tr><td>20</td><td rowspan = "5" >B2</td><td>虚函数表指针:vptr@B2</td></tr>
-    <tr><td>24</td><td>a</td></tr>
-    <tr><td>28</td><td>b</td></tr>
-    <tr><td>32</td><td>a2</td></tr>  
-    <tr><td>36</td><td>b2</td></tr>  
-    <tr><td>40</td><td rowspan = "3" >D</td><td>ad</td></tr>
-    <tr><td>44</td><td>bd</td></tr>
+    <tr><td>0</td><td rowspan = "5" >B1</td><td>虚函数表指针:vptr@B1</td><td>D如果还虚函数会在这里添加或者覆盖基类虚函数地址</td></tr>
+    <tr><td>4</td><td>a</td><td></td></tr>
+    <tr><td>8</td><td>b</td><td></td></tr>
+    <tr><td>12</td><td>a1</td><td></td></tr>  
+    <tr><td>16</td><td>b1</td><td></td></tr>
+    <tr><td>20</td><td rowspan = "5" >B2</td><td>虚函数表指针:vptr@B2</td><td>D如果还虚函数会在这里添加或者覆盖基类虚函数地址</td></tr>
+    <tr><td>24</td><td>a</td><td></td></tr>
+    <tr><td>28</td><td>b</td><td></td></tr>
+    <tr><td>32</td><td>a2</td><td></td></tr>  
+    <tr><td>36</td><td>b2</td><td></td></tr>  
+    <tr><td>40</td><td rowspan = "3" >D</td><td>ad</td><td></td></tr>
+    <tr><td>44</td><td>bd</td><td></td></tr>
 </table>
 
 
@@ -224,7 +224,7 @@
         virtual void f(){}
         
         virtual void Bf(){}
-    }
+    };
     
     class B1:virtual public B
     {
@@ -236,7 +236,7 @@
         virtual void f1(){}
         
         virtual void Bf1(){}
-    }
+    };
     
     class B2:virtual public B
     {
@@ -248,7 +248,7 @@
         virtual void f2(){}
         
         virtual void Bf2(){}
-    }
+    };
     
     
     class D:public B1, public B2
@@ -263,7 +263,7 @@
         virtual void f2(){}
         
         virtual void Df(){}
-    }
+    };
 
 ```
 - vptr@B1
@@ -280,11 +280,11 @@
     - B::f()
 
 <table>
-    <tr><td>0</td><td rowspan = "4" >B1</td><td>虚函数表指针:vptr@B1</td></tr>
+    <tr><td>0</td><td rowspan = "4" >B1</td><td>虚函数表指针:vptr@B1</td><td>D如果还虚函数会在这里添加或者覆盖基类虚函数地址</td></tr>
     <tr><td>4</td><td>虚基类指针:vbptr@B1</td></tr>
     <tr><td>8</td><td>a1</td></tr>
     <tr><td>12</td><td>b1</td></tr>    
-    <tr><td>16</td><td rowspan = "4" >B2</td><td>虚函数表指针:vptr@B2</td></tr>
+    <tr><td>16</td><td rowspan = "4" >B2</td><td>虚函数表指针:vptr@B2</td><td>D如果还虚函数会在这里添加或者覆盖基类虚函数地址</td></tr>
     <tr><td>20</td><td>虚基类指针:vbptr@B2</td></tr>
     <tr><td>24</td><td>a2</td></tr>
     <tr><td>28</td><td>b2</td></tr>
