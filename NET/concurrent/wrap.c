@@ -13,13 +13,14 @@ void perr_exit(const char *s)
 /**
  *
  * @param family
- * 对于IPv4，domain参数指定为AF_INET
+ * 对于IPv4，domain参数指定为AF_INET (AF: address family   INET:internet)
  * AF_INET6 与上面类似，不过是来用IPv6的地址
  * AF_UNIX 本地协议，使用在Unix和Linux系统上，一般都是当客户端和服务器在同一台及其上的时候使用
  * @param type
  * 对于TCP协议，type参数指定为SOCK_STREAM，表示面向流的传输协议
  * 如果是UDP协议，则type参数指定为SOCK_DGRAM，表示面向数据报的传输协议
  * @param protocol
+ * 0 默认协议
  * @return 成功返回一个新的文件描述符，失败返回-1，设置errno
  */
 int Socket(int family, int type, int protocol)

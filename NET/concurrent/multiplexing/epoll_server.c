@@ -98,9 +98,9 @@ int epoll_wait(
  (2) 如果没有，则在树干上插入新的节点, 内核中断处理程序注册一个回调函数( 告诉内核如果这个句柄的中断到了，就把它放到准备就绪list链表里)
 
  3. 执行epoll_wait, 仅仅观察这个list链表里有没有数据
- (1) LT模式  该节点有事件未处理 则把该节点重新放入就绪链表，epoll_wait返回
- (2) ET模式  有将数据就返回，清空链表 (通知应用程序后, 应用程序必须立刻处理)
- 不用重复传递。我们调用epoll_wait时就相当于以往调用select/poll，但是这时却不用传递socket句柄给内核，因为内核已经在epoll_ctl中拿到了要监控的句柄列表。\
+ (1) LT模式  该节点有事件未处理 则把该节点重新放入就绪链表，epoll_wait返回 (应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件)
+ (2) ET模式  把准备就绪的socket拷贝到用户态内存，清空就绪链表 (通知应用程序后, 应用程序必须立刻处理)
+ 不用重复传递。我们调用epoll_wait时就相当于以往调用select/poll，但是这时却不用传递socket句柄给内核，因为内核已经在epoll_ctl中拿到了要监控的句柄列表。
 
 ------------------------------------------------------
 ☆☆☆☆用程序索引就绪文件描述符的时间复杂度:
@@ -126,6 +126,25 @@ int epoll_wait(
 
 内核通过管理一个事件表直接管理用户感兴趣的所有事件。每次调用epoll_wait的时候无需反复传入用户感兴趣事件。epoll_wait系统调用参数events仅仅用来反馈就绪的事件
 
+ ---------------------------------------------------------------------------
+ struct sockaddr        ipv4  现在退化为（void*） sockaddr_in or sockaddr_in6
+    16bit addr type
+    14byte addr data
+
+ struct sockaddr_in
+    16bit addr type : AF_INET
+                     |--   16bit port
+    14byte addr data |--   32bit ip addr
+                     |--   8byte 填充
+
+ struct sockaddr_un
+    16bit  addr type : AF_UNIX
+    108byte 路径名
+
+ -----------------------------------------------------
+
+
+
  **/
 
 #include <ctype.h>
@@ -148,15 +167,15 @@ int main(int argc, char *argv[])
     ssize_t n;
     char buf[MAXLINE], str[INET_ADDRSTRLEN];
     socklen_t clilen;
-    int client[OPEN_MAX];
+    int client[OPEN_MAX];                           //id -> confd
     struct sockaddr_in cliaddr, servaddr;
     struct epoll_event tep, ep[OPEN_MAX];//
 
     listenfd = Socket(AF_INET, SOCK_STREAM, 0);// 接口
     bzero(&servaddr, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(SERV_PORT);
+    servaddr.sin_family = AF_INET;          //sin_的意思: sockaddr_in
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY); //host to network long
+    servaddr.sin_port = htons(SERV_PORT);   //host to network short
 
     Bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr));//绑定
 
@@ -179,23 +198,23 @@ int main(int argc, char *argv[])
 
     for ( ; ; ) {
         // efd :
-        // ep : 冲内核得到的事件集合
+        // ep : 冲内核得到的事件集合 是个数组地址
         // OPEN_MAX: 告诉内核ep多大，不能大于创建epoll_create(int size) 中size的大小
         nready = epoll_wait(efd, ep, OPEN_MAX, -1); //内存拷贝，利用mmap()文件映射内存加速与内核空间的消息传递；即epoll使用mmap减少复制开销  epoll_wait
         if (nready == -1) //-1表示阻塞
             perr_exit("epoll_wait");
 
-
+        // 对从内核回传的ep进行遍历检测
         for (i = 0; i < nready; i++)
         {
-            if (!(ep[i].events & EPOLLIN))
+            if (!(ep[i].events & EPOLLIN)) //不可读
                 continue;
             if (ep[i].data.fd == listenfd) //新连接
             {
                 clilen = sizeof(cliaddr);
                 connfd = Accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);//接收新的连接
                 printf("received from %s at PORT %d\n",
-                       inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)),
+                       inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)),//internet network to presentation
                        ntohs(cliaddr.sin_port));
                 for (j = 0; j < OPEN_MAX; j++)
                     if (client[j] < 0)

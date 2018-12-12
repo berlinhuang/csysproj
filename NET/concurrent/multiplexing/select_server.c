@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
         nready = select(maxfd+1, &rset, NULL, NULL, NULL);   //                 2.对socket进行扫描时是线性扫描，即采用轮询的方法，效率较低
         if (nready < 0)
             perr_exit("select error");
+        // 对从内核回传的rset 进行遍历检测
         if (FD_ISSET(listenfd, &rset))// new client connection
         {
             cliaddr_len = sizeof(cliaddr);
