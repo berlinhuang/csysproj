@@ -19,6 +19,9 @@
 -   [6.2 awk](#6.2)
 
 -   [6.3 正规表达式](#6.3)
+
+[7. cpu disk monitor](#7)
+
 ---
 <h3 id = "1"> 1. netstat</h3>
 
@@ -184,6 +187,7 @@
 
 <h3 id = "5"> 5. ps top </h3>  
 <h4 id='5.1'> 5.1 ps </h4>
+
 1. UNIX 风格，选项可以组合在一起，并且选项前必须有“-”连字符 ps -ef
 2. BSD 风格，选项可以组合在一起，但是选项前不能有“-”连字符 ps aux
 3. GNU 风格的长选项，选项前有两个“-”连字符
@@ -204,8 +208,10 @@
 - ps -ax | less //less命令和管道来使用
 - ps -u berlin //用户’berlin’的进程
 - ps -aux | less //通过cpu和内存使用来过滤进程
-- ps -aux --sort -pcpu | less //根据 CPU使用 来升序排序
-- ps -aux --sort -pmem | less //根据 内存使用 来升序排序
+- ps -aux --sort -pcpu | less //根据 CPU使用 来递减排序
+- ps -aux --sort -pmem | less //根据 内存使用 来递减排序
+- ps -aux --sort=-pcpu | less // cpu递减
+- ps -aux --sort=-pcpu,+pmem |less // cpu递减 mem递增
 - ps -C getty     //使用 -C 参数，后面跟你要找的进程的名字    
 - ps -L 1213     //特定进程的线程，可以使用-L 参数，后面加上特定的PID 
 - ps -eLf | grep "..." // 查看线程
@@ -219,6 +225,7 @@
     - -b  ：以批量的方式运行 top ，还有更多的参数可以使用喔！通常会搭配数据流重导向来将批量的结果输出成为文件。
     - -n  ：与 -b 搭配，意义是，需要进行几次 top 的输出结果。
     - -p  ：指定某些个 PID 来进行观察监测而已。
+    - -c  ：显示进程的完整命令
     
 > 将top的资讯进行2次，然后将结果输出到/tmp/top.txt
 - top -b -n 2 > /tmp/top.txt  
@@ -357,3 +364,25 @@
 
 > 在 g 与 g 之间有 2 个到 3 个的 o 存在的字串，亦即 (goog)(gooog)
 - grep -n 'go\\{2,3\\}g' regular_express.txt
+
+<h3 id = "7"> 7. cpu disk </h3>  
+
+> 查看物理cpu个数( --sort -u  )
+- grep 'physical id' /proc/cpuinfo | sort -u
+
+> 查看核心数量
+- grep 'core id' /proc/cpuinfo | sort -u | wc -l
+
+> 查看线程数
+- grep 'processor' /proc/cpuinfo | sort -u | wc -l
+
+> 当前目录下的文件夹大小 du (disk usage)按大小排序目录
+- du -h --time --max-depth=1 | sort -hr 
+
+> 查看文件系统的容量 使用情况
+- df -h
+
+> 查看各个分区的使用情况 lsblk(lst block devices) 
+- lsblk
+
+
