@@ -22,6 +22,8 @@
 
 [7. cpu disk monitor](#7)
 
+[8. vim ls](#8)
+
 ---
 <h3 id = "1"> 1. netstat</h3>
 
@@ -151,7 +153,7 @@
 4. 资源共享，多个进程之间共享同样的资源。为了做到这一点，需要内核提供锁和同步机制；
 5. 进程控制，有些进程希望完全控制另一个进程的执行（如Debug进程），此时控制进程希望能够拦截另一个进程的所有陷入和异常，并能够及时知道它的状态改变。
 
-<h3 id = "3"> 3. ipcs(state) 提供IPC设备的信息 包括共享内存，消息队列，信号</h3>  
+<h3 id = "3"> 3. ipcs( Inter-Process Communication State) 提供IPC设备的信息 包括共享内存，消息队列，信号</h3>  
 
 > ipcs [resource-option] [output-format]
 
@@ -379,10 +381,24 @@
 > 当前目录下的文件夹大小 du (disk usage)按大小排序目录
 - du -h --time --max-depth=1 | sort -hr 
 
-> 查看文件系统的容量 使用情况
+> 查看文件系统的容量 使用情况 disk FileSystem
 - df -h
 
 > 查看各个分区的使用情况 lsblk(lst block devices) 
 - lsblk
 
+<h3 id = "8"> 8. vim ls </h3>  
 
+> ls -alhS
+
+- -a, –all 列出目录下的所有文件，包括以 . 开头的隐含文件
+- -A 同-a，但不列出“.”(表示当前目录)和“…”(表示当前目录的父目录)。
+- -l – 长（long）。列举目录内容的细节，包括权限（模式）、所有者、组群、大小、创建日期、文件是否是到系统其它地方的链接，以及链接的指向。
+- -h, –human-readable 以容易理解的格式列出文件大小 (例如 1K 234M 2G)
+- -s, –size 以块大小为单位列出所有文件的大小
+- -S – 大小（size）。按文件大小排序。
+
+
+> vi 
+
+- -R 只读形式打开
