@@ -22,7 +22,7 @@
 
 [7. cpu disk monitor](#7)
 
-[8. vim ls](#8)
+[8. vim ls grep ](#8)
 
 ---
 <h3 id = "1"> 1. netstat</h3>
@@ -369,6 +369,9 @@
 
 <h3 id = "7"> 7. cpu disk </h3>  
 
+> 查看cpu型号
+- cat /proc/cpuinfo | grep 'model name' |uniq
+
 > 查看物理cpu个数( --sort -u  )
 - grep 'physical id' /proc/cpuinfo | sort -u
 
@@ -377,6 +380,35 @@
 
 > 查看线程数
 - grep 'processor' /proc/cpuinfo | sort -u | wc -l
+
+> 查看内存大小
+- grep "MemTotal" /proc/meminfo 
+
+> dmidecode 可以查询BIOS、系统、主板、处理器、内存、缓存等非常重要信息
+- dmidecode | grep 'Product Name'                          // 查看服务器型号
+- dmidecode | grep 'Serial Number'                         // 查看主板的序列号
+- dmidecode -s system-serial-number                        // 查看系统序列号
+- dmidecode -t memory                                      // 查看内存信息
+- dmidecode -t 11                                               // 查看OEM信息
+- dmidecode | grep -A16 "Memory Device" | grep "Size" |sed 's/^[ \t]*//'  // 现有内存数量和内存大小
+```bash
+Size: 8192 MB
+Size: 8192 MB
+Size: No Module Installed
+Size: No Module Installed
+Size: No Module Installed
+Size: No Module Installed
+Size: 8192 MB
+Size: 8192 MB
+Size: No Module Installed
+Size: No Module Installed
+Size: No Module Installed
+Size: No Module Installed
+```
+- sudo dmidecode | grep "Maximum Capacity" |sed 's/^[ \t]*//'     // 最大支持内存容量
+```bash
+Maximum Capacity: 384 GB
+```
 
 > 当前目录下的文件夹大小 du (disk usage)按大小排序目录
 - du -h --time --max-depth=1 | sort -hr 
@@ -398,7 +430,13 @@
 - -s, –size 以块大小为单位列出所有文件的大小
 - -S – 大小（size）。按文件大小排序。
 
-
 > vi 
 
 - -R 只读形式打开
+
+> grep
+
+- -A<显示行数> 或 --after-context=<显示行数> : 除了显示符合范本样式的那一列之外，并显示该行之后的内容。
+- -E 或 --extended-regexp : 将样式为延伸的正则表达式来使用。
+- -P 表示用perl正则表达式
+- ps -ef | grep "MTrunk" -v "grep"  不显示grep这个进程
