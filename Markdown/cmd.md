@@ -24,6 +24,8 @@
 
 [8. vim ls grep ](#8)
 
+[9. ldconfig ](#9)
+
 ---
 <h3 id = "1"> 1. netstat</h3>
 
@@ -440,3 +442,28 @@ Maximum Capacity: 384 GB
 - -E 或 --extended-regexp : 将样式为延伸的正则表达式来使用。
 - -P 表示用perl正则表达式
 - ps -ef | grep "MTrunk" -v "grep"  不显示grep这个进程
+
+<h3 id = "9"> 9. ldconfig ldd </h3>  
+
+> 链接库
+- 静态库 libxxx.a     .lib
+- 动态库 libxxx.so    .dll
+
+> ldconfig (load config)
+- 默认搜寻/lilb和/usr/lib，以及配置文件/etc/ld.so.conf内所列的目录下的库文件
+- 往/lib和/usr/lib里面加东西，是不用修改/etc/ld.so.conf文件的，但是添加完后需要调用下ldconfig，不然添加的library会找不到
+- 动态装入器找到共享库要依靠两个文件 — /etc/ld.so.conf 和 /etc/ld.so.cache
+- /etc/ld.so.cache 将文件/etc/ld.so.conf列出的路径下的库文件缓存到/etc/ld.so.cache以供使用，因此当安装完一些库文件，或者修改/etc/ld.so.conf增加了库的新的搜索路径，需要运>行一下ldconfig，使所有的库文件都被缓存到文件/etc/ld.so.cache中，如果没做，可能会找不到刚安装的库
+- /etc/ld.so.conf 文件包含一个所有目录（/lib 和 /usr/lib 除外，它们会自动包含在其中）的清单，动态装入器将在其中查找共享库。
+
+> 查看一个程序依赖的so文件: ldd
+- 如：ldd /bin/ls
+
+> 动态库执行路径：LD_LIBRARY_PATH
+- 临时修改 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64
+- 用户级别修改 sudo vim ~/.bashrc        
+- 系统级别修改 sudo vim ~/profile
+
+
+
+
