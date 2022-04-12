@@ -5,7 +5,11 @@
 #include "sort.h"
 #include <stdio.h>
 
-
+/**
+ * 插入排序
+ * @param r
+ * @param n
+ */
 void InsertSort(RecNode r[], int n)  //stable
 {
     int  i,j;
@@ -17,7 +21,11 @@ void InsertSort(RecNode r[], int n)  //stable
         r[j+1]=r[0];
     }
 }
-
+/**
+ * 二分插入排序
+ * @param r
+ * @param n
+ */
 void BinInseSort(RecNode r[], int n)
 {
     int i, j, low, high, mid;
@@ -40,8 +48,11 @@ void BinInseSort(RecNode r[], int n)
     }
 }
 
-
-//希尔排序（缩小增量排序）
+/**
+ * 希尔排序（缩小增量排序）
+ * @param r
+ * @param n
+ */
 void ShellSort(RecNode r[], int n)   // no stable
 {
     printf("-----------------------total element=%d\n",n);
@@ -74,7 +85,11 @@ void ShellSort(RecNode r[], int n)   // no stable
 
 ///////////////////////////////////////////////////////////////////////////////////
 //swap sort
-
+/**
+ * 冒泡排序
+ * @param r
+ * @param n
+ */
 void BubbleSort( RecNode r[], int n)  //stable
 {
     int i,j;
@@ -96,7 +111,7 @@ void BubbleSort( RecNode r[], int n)  //stable
 }
 
 
-
+///////////////////////////////////////////////////////////////////////////////////
 
 int Partition(RecNode r[], int low, int high )
 {
@@ -126,7 +141,12 @@ int Partition(RecNode r[], int low, int high )
     r[low] = x;//找到x 存放的点low 左边都比x小，右边都比x大
     return low;
 }
-
+/**
+ * 堆排序
+ * @param r
+ * @param m
+ * @param n
+ */
 void QuickSort( RecNode r[], int m, int n)   //no stable
 {
     int i;
@@ -140,7 +160,11 @@ void QuickSort( RecNode r[], int m, int n)   //no stable
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-
+/**
+ * 选择排序
+ * @param r
+ * @param n
+ */
 void SelectSort(RecNode r[],int n)
 {
     int i,j,k;
@@ -189,7 +213,11 @@ void Sift(RecNode r[],int i,int m)
     r[i]=temp;
 }
 
-
+/**
+ * 堆排序
+ * @param r
+ * @param n
+ */
 void HeapSort( RecNode r[], int n)
 {
     int i;
@@ -255,7 +283,11 @@ void merge_one( RecNode r[], int len, int n)
     if(i+len-1<n-1)
         merge(r,i,i+len-1,n-1);
 }
-
+/**
+ * 归并排序
+ * @param r
+ * @param n
+ */
 void MergeSort(RecNode r[], int n)
 {
     int len = 1;

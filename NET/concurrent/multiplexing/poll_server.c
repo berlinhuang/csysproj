@@ -83,14 +83,14 @@ int main(int argc, char *argv[])
     socklen_t clilen;
     struct pollfd client[OPEN_MAX];
     struct sockaddr_in cliaddr, servaddr;
-    listenfd = Socket(AF_INET, SOCK_STREAM, 0);//创建接口                                                          socket
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);//创建接口                                                 socket
 
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(SERV_PORT);
 
-    Bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));//绑定                                          bind
+    Bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr));//绑定                                         bind
 
     Listen(listenfd, 20);//监听                                                                                    listen
 
@@ -110,19 +110,19 @@ int main(int argc, char *argv[])
         if (client[0].revents & POLLRDNORM) //revents为传出参数， 有客户端链接请求
         {
             clilen = sizeof(cliaddr);//编译的时候就计算了
-            connfd = Accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);//接收连接                              Accept
+            connfd = Accept(listenfd, (struct sockaddr *)&cliaddr, &clilen);//接收连接                        Accept
             printf("received from %s at PORT %d\n", inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)), ntohs(cliaddr.sin_port));
             for (i = 1; i < OPEN_MAX; i++)
             {
                 if (client[i].fd < 0)
                 {
-                    client[i].fd = connfd;//1. 找到client[]中空闲的位置,存放accept返回的connfd
+                    client[i].fd = connfd;          //1. 找到client[]中空闲的位置,存放accept返回的connfd
                     break;
                 }
             }
             if (i == OPEN_MAX)
                 perr_exit("too many clients");
-            client[i].events = POLLRDNORM;	// 2. 设置刚刚返回的connfd,监控读事件
+            client[i].events = POLLRDNORM;	        //2. 设置刚刚返回的connfd,监控读事件
             if (i > maxi)
                 maxi = i; // 更新client[]中最大元素下标
             if (--nready <= 0)

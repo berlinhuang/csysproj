@@ -280,7 +280,7 @@ LinkList MergerLinkList(LinkList La,LinkList Lb)
 
 
 /////////////////////////////////////////////////////////
-
+// ascii to integer
 int my_atoi(const char *str)
 {
     int s=0;

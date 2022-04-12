@@ -91,9 +91,9 @@ int epoll_wait(
 
 ☆☆☆☆过程(使用一组函数来完成任务，而不是单个函数):
 
- 1. 执行epoll_create时，创建了红黑树(事件表)(存储所监控的文件描述符的节点数据)  和 就绪链表(双向链表)(存储就绪的文件描述符的节点数据)
+ 1. 执行epoll_create时，创建了事件表(红黑树)(存储所监控的文件描述符的节点数据)  和 就绪链表(双向链表)(存储就绪的文件描述符的节点数据)
 
- 2. 执行epoll_ctl时(查找、插入、删除), 红黑树上添加新的描述符           socket上有数据到了，内核在把网卡上的数据copy到内核中，后就来把socket插入到准备就绪链表里
+ 2. 执行epoll_ctl时(查找、插入、删除)O(log2 n), 红黑树上添加新的描述符           socket上有数据到了，内核在把网卡上的数据copy到内核中，后就来把socket插入到准备就绪链表里
  (1) 如果有，则立即返回。
  (2) 如果没有，则在树干上插入新的节点, 内核中断处理程序注册一个回调函数( 告诉内核如果这个句柄的中断到了，就把它放到准备就绪list链表里)
 
@@ -171,15 +171,15 @@ int main(int argc, char *argv[])
     struct sockaddr_in cliaddr, servaddr;
     struct epoll_event tep, ep[OPEN_MAX];//
 
-    listenfd = Socket(AF_INET, SOCK_STREAM, 0);// 接口
+    listenfd = Socket(AF_INET, SOCK_STREAM, 0);//                                           接口
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;          //sin_的意思: sockaddr_in
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY); //host to network long
     servaddr.sin_port = htons(SERV_PORT);   //host to network short
 
-    Bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr));//绑定
+    Bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr));//                              绑定
 
-    Listen(listenfd, 20);//监听
+    Listen(listenfd, 20);//                                                                          监听
 
     for (i = 0; i < OPEN_MAX; i++)
         client[i] = -1;

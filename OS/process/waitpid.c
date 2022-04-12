@@ -46,10 +46,10 @@ int Zombie(void)
 pid_t wait(int *status);
 
 pid_t waitpid(pid_t pid, int *status, int options);
-< -1    回收指定进程组内的任意子进程
-= -1    回收任意子进程
-= 0     回收和当前调用waitpid一个组的所有子进程
-> 0     回收指定ID的子进程
+pid < -1    回收指定进程组内的任意子进程
+pid = -1    回收任意子进程
+pid = 0     回收和当前调用waitpid一个组的所有子进程
+pid > 0     回收指定ID的子进程
 
 
 父进程调用wait或waitpid时可能会：
@@ -99,9 +99,9 @@ int main(void)
     {
         int stat_val;
         waitpid(pid, &stat_val, 0);
-        if (WIFEXITED(stat_val))
+        if (WIFEXITED(stat_val)) //WIFEXITED(status)如果若为正常结束子进程返回的状态，则为真
             printf("Child exited with code %d\n", WEXITSTATUS(stat_val));
-        else if (WIFSIGNALED(stat_val))
+        else if (WIFSIGNALED(stat_val))  //WIFSIGNALED(status)若为异常结束子进程返回的状态，则为真
             printf("Child terminated abnormally, signal %d\n", WTERMSIG(stat_val));
     }
 

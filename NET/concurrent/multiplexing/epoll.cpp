@@ -93,14 +93,14 @@ int main (int argc, char* argv[])
 
     int listenfd = socket(AF_INET,SOCK_STREAM, 0);                                     //socket
     assert(listenfd >= 0);
-    ret = bind(listenfd, (struct sockaddr*)&address, sizeof(address));//               //bind
+    ret = bind(listenfd, (struct sockaddr*)&address, sizeof(address));//                        //bind
     assert(ret != -1);
-    ret = listen(listenfd, 5);                                                         //listen
+    ret = listen(listenfd, 5);                                                                          //listen
     assert(ret != -1);
 
     //连接部分放到epoll托管
     struct epoll_event events[MAX_SOCKET_NUMBERS];//epoll所能托管最多文件描述符个数
-    int epollfd = epoll_create(5);                                                     //epoll_create
+    int epollfd = epoll_create(5);                                                           //epoll_create
     assert(epollfd != -1);
     addfd(epollfd,listenfd,true);// 把监听套接字存放到epoll true采用ET模式                 //epoll_ctl        add  listen_fd
 
@@ -123,9 +123,9 @@ int main (int argc, char* argv[])
 
 int setnonblocking(int fd)
 {
-    int old_option = fcntl(fd, F_GETFL);
+    int old_option = fcntl(fd, F_GETFL);// 获取打开文件描述符的状态标志
     int new_option = old_option | O_NONBLOCK;
-    fcntl(fd,F_SETFL,new_option);
+    fcntl(fd,F_SETFL,new_option); //设置
     return new_option;
 
 }
@@ -153,7 +153,7 @@ void lt( struct epoll_event* events, int number, int epollfd, int listenfd)
     for(int i= 0 ; i<number;i++)
     {
         int sockfd = events[i].data.fd;
-        if(sockfd == listenfd)//监听事件的  套接字   listenfd就绪有新的客户端连接请求
+        if(sockfd == listenfd)                              //监听事件的  套接字   listenfd就绪有新的客户端连接请求
         {
             struct sockaddr_in client_address;
             socklen_t client_addresslen =sizeof(client_address);
@@ -165,7 +165,7 @@ void lt( struct epoll_event* events, int number, int epollfd, int listenfd)
                 exit(1);
             }
         }
-        else if(events[i].events  &  EPOLLIN)//可读事件的  套接字
+        else if(events[i].events  &  EPOLLIN)               //可读事件的  套接字
         {
             printf("LT once\r\n");
             memset(buf,0x00, sizeof(buf));
@@ -193,14 +193,14 @@ void et( struct epoll_event* events, int number, int epollfd, int listenfd)
     for(int i = 0;i<number;i++)
     {
         int sockfd = events[i].data.fd;
-        if(sockfd == listenfd)
+        if(sockfd == listenfd)                                  //监听事件的套接字 新连接到来
         {
             struct sockaddr_in client_address;
             socklen_t client_addresslen = sizeof(client_address);
             int connfd = accept (listenfd, (struct sockaddr *)&client_address, &client_addresslen);//接收新的连接
             addfd(epollfd, connfd, 1);                                                     //add     newcon_fd
         }
-        else if(events[i].events & EPOLLIN)
+        else if(events[i].events & EPOLLIN)                     //可读事件的套接字
         {
             printf("ET once \r\n");
             while(1)//促发一次就要全部读取完，或者直到errno=EAGAIN

@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     inet_pton(AF_INET, "127.0.0.1", &servaddr.sin_addr);
     servaddr.sin_port = htons(SERV_PORT);
     Connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
-    while (fgets(buf, MAXLINE, stdin) != NULL) {
+    while (fgets(buf, MAXLINE, stdin) != NULL) {//从指定的流中读取数据，每次读取一行
         Write(sockfd, buf, strlen(buf));
         n = Read(sockfd, buf, MAXLINE);
         if (n == 0)

@@ -49,7 +49,9 @@ int main(void)
 
     listenfd = Socket(AF_INET, SOCK_STREAM, 0);//打开网络通讯接口
 
-    bzero(&servaddr, sizeof(servaddr));
+    // bzero无返回值，并且使用string.h头文件，string.h曾经是posix标准的一部分，但是在POSIX.1-2001标准里面，这些 函数被标记为了遗留函数而不推荐使用。
+    // 在POSIX.1-2008标准里已经没有这些函数了。推荐使用memset替代bzero。
+    bzero(&servaddr, sizeof(servaddr));//将内存块的前 n 个字节清零，s 参数为指针
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(SERV_PORT);
@@ -71,8 +73,8 @@ int main(void)
                     break;
                 }
                 printf("received from %s at PORT %d\n",
-                       inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)),//地址
-                       ntohs(cliaddr.sin_port));//端口
+                       inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)),//地址 [将“二进制整数” －> “点分十进制”]
+                       ntohs(cliaddr.sin_port));//端口 将一个无符号短整型数从网络字节顺序转换为主机字节顺序
                 for (i = 0; i < n; i++)
                     buf[i] = toupper(buf[i]);//touppper
                 Write(connfd, buf, n);//返回
