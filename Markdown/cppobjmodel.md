@@ -120,7 +120,7 @@
 
 <table>
     <tr>
-        <td>成员函数:</br> Point::point(float) </br> float Point::x()</td>
+        <td>成员函数:<br> Point::point(float) <br>float Point::x()</td>
     </tr>
 </table>
 
@@ -294,7 +294,7 @@
     <tr><td>44</td><td>虚函数表指针:vptr@B</td></tr>
     <tr><td>48</td><td>a</td></tr>
     <tr><td>52</td><td>b</td></tr>
-<table>
+</table>
 
 
 
