@@ -16,8 +16,10 @@ MySQLConn::~MySQLConn() {
 
 // 连接数据库
 bool MySQLConn::connect(string hostName, unsigned short port, string user,  string passwd, string dbname) {
-    if (mysql_real_connect(this->_conn, hostName.c_str(), user.c_str(), passwd.c_str(), dbname.c_str(), 0, NULL, 0))
+    if (mysql_real_connect(this->_conn, hostName.c_str(), user.c_str(), passwd.c_str(),
+                           dbname.c_str(), 0, NULL, 0))
     {
+        std::cout << "连接成功" << endl;
         mysql_query(_conn, "set names utf8"); // 设置编码
         return true;
     }
@@ -25,11 +27,11 @@ bool MySQLConn::connect(string hostName, unsigned short port, string user,  stri
 }
 
 
-bool MySQLConn::update(const string &s) {
-    if(mysql_query(_conn,s.c_str())){
-
-    }
-}
+//bool MySQLConn::update(const string &s) {
+//    if(mysql_query(_conn,s.c_str())){
+//
+//    }
+//}
 
 MYSQL_RES * MySQLConn::query(string sql) {
     if(mysql_query(_conn,sql.c_str())){
@@ -57,6 +59,19 @@ int MySQLConn::rowCount()
     }
 
     return m_affected_rows;
+}
+
+
+bool MySQLConn::next()
+{
+    if (!m_hasRead)
+    {
+        mysql_read();
+        m_hasRead = true;
+        m_affected_rows = mysql_affected_rows(this->_conn);
+    }
+
+    return (++m_curReadValueIndex < m_affected_rows);
 }
 
 int MySQLConn::columnCount()

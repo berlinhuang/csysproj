@@ -20,7 +20,7 @@ bool MySQLConnPool::loadConfigFile() {
 
         if(idx == -1 ) continue;
 
-        int endidx = str.find('\n',idx);
+        int endidx = str.find('\r',idx);
         string key = str.substr(0,idx);
         string val = str.substr(idx+1,endidx-idx-1);
 

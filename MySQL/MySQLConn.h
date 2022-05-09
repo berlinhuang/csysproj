@@ -8,6 +8,7 @@
 #include <string>
 #include <cstring>
 #include "mysql/mysql.h"
+#include <iostream>
 
 using namespace  std;
 
@@ -16,6 +17,7 @@ private:
     MYSQL * _conn; //mysql 数据库连接句柄
     clock_t _alivetime;
 //    MYSQL * m_dbHandle = nullptr;
+protected:
     int m_affected_rows = -1;     //mysql_read
     bool m_hasRead = false;       //执行exec后，是否已调用过mysql_read
     int m_curReadValueIndex = -1; //执行mysql_read后，下次取第几行的数据
@@ -27,7 +29,8 @@ public:
     MySQLConn();
     ~MySQLConn();
     bool connect( string ip, unsigned short port, string username, string password, string dbname);
-    bool update(const string &s );
+    bool next();
+//    bool update(const string &s );
     MYSQL_RES * query(string sql);
     bool exec(const string &s); //执行SQL语句，末尾不需要加分号
 
@@ -45,6 +48,7 @@ public:
     clock_t end() const {
         return clock() - _alivetime;
     }
+
 };
 
 
