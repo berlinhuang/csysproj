@@ -13,6 +13,9 @@ int main(){
     MySQLConnPool *cp = MySQLConnPool::getInstancePtr();
     for( int i = 0; i<MULTITHREADLEN; ++i){
         shared_ptr<MySQLConn> sp = cp->getConnection();
+        sp->exec("select * from user");
+        cout << "行数:" << sp->rowCount() << endl;
+        cout << "列数:" << sp->columnCount() << endl;
     }
     clock_t end =clock();
     cout<<(end-begin)<<"ms"<<endl;

@@ -16,12 +16,26 @@ private:
     MYSQL * _conn; //mysql 数据库连接句柄
     clock_t _alivetime;
 //    MYSQL * m_dbHandle = nullptr;
+    int m_affected_rows = -1;     //mysql_read
+    bool m_hasRead = false;       //执行exec后，是否已调用过mysql_read
+    int m_curReadValueIndex = -1; //执行mysql_read后，下次取第几行的数据
+    // 存储读取数据
+    string **m_execResult;
+    int m_rowCount;
+    int m_colCount;
 public:
     MySQLConn();
     ~MySQLConn();
     bool connect( string ip, unsigned short port, string username, string password, string dbname);
     bool update(const string &s );
     MYSQL_RES * query(string sql);
+    bool exec(const string &s); //执行SQL语句，末尾不需要加分号
+
+    // 获取更新行列数
+    int rowCount();
+    int columnCount();
+    // 数据读取
+    void mysql_read();
 
     void start() {
         _alivetime = clock();
