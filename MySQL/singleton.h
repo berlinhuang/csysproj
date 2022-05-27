@@ -72,15 +72,9 @@ public:
 
 };
 
-//类外初始化静态成员变量
-//template <typename T>
-//std::atomic<T*>Singleton<T>::m_instance{nullptr};
-//
-//template <typename T>
-//std::mutex Singleton<T>::m_mtx{};
 
-
-//宏定义
+//宏定义 类外对静态成员变量初始化
+// template<> 正在为原模板的所有模板参数提供实参 特例化
 #define IMPLEMENT_SINGLETON(ClassName) \
     template<> std::atomic<ClassName*> Singleton<ClassName>::m_instance(0); \
     template<> std::mutex Singleton<ClassName>::m_mtx{};

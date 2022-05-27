@@ -2,7 +2,7 @@
 // Created by Berlin Huang on 2022/4/29 0029.
 //
 
-#include "MySQLConnPool.h"
+#include "mysqlconnpool.h"
 
 IMPLEMENT_SINGLETON(MySQLConnPool)
 
@@ -64,10 +64,10 @@ MySQLConnPool::MySQLConnPool() {
         _connectionCnt ++;
     }
 
-    thread produce(bind(&MySQLConnPool::produceConnectionTask,this));
+    thread produce(bind(&MySQLConnPool::produceConnectionTask, this));
     produce.detach();
 
-    thread scanner( bind(&MySQLConnPool::scannerConnectionTask,this));
+    thread scanner( bind(&MySQLConnPool::scannerConnectionTask, this));
     scanner.detach();
 
 }
@@ -88,7 +88,7 @@ shared_ptr<MySQLConn> MySQLConnPool::getConnection(){
  这里需要自定义shared_ptr释放资源的方式， 把connection归还到连接池中
  * */
     shared_ptr<MySQLConn> sp(_connectionQue.front(),
-                              [&] (MySQLConn *con) {
+                             [&] (MySQLConn *con) {
                                   unique_lock<mutex> lock(_queueMutex);
                                   con->start();
                                   _connectionQue.push(con);

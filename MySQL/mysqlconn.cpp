@@ -2,7 +2,7 @@
 // Created by Berlin Huang on 2022/4/29 0029.
 //
 
-#include "MySQLConn.h"
+#include "mysqlconn.h"
 
 //初始化连接
 MySQLConn::MySQLConn() {
@@ -15,7 +15,7 @@ MySQLConn::~MySQLConn() {
 }
 
 // 连接数据库
-bool MySQLConn::connect(string hostName, unsigned short port, string user,  string passwd, string dbname) {
+bool MySQLConn::connect(string hostName, unsigned short port, string user, string passwd, string dbname) {
     if (mysql_real_connect(this->_conn, hostName.c_str(), user.c_str(), passwd.c_str(),
                            dbname.c_str(), 0, NULL, 0))
     {

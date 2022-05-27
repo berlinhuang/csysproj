@@ -3,8 +3,8 @@
 //
 
 #include <memory> //clock_t
-#include "MySQLConn.h"
-#include "MySQLConnPool.h"
+#include "mysqlconn.h"
+#include "mysqlconnpool.h"
 
 #define MULTITHREADLEN 1024
 

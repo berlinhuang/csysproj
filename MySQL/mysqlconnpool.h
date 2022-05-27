@@ -6,8 +6,8 @@
 #define CSYSPROJ_MYSQLCONNPOOL_H
 
 #include "public.h"
-#include "Singleton.h"
-#include "MySQLConn.h"
+#include "singleton.h"
+#include "mysqlconn.h"
 #include <thread>
 #include <queue>
 #include <functional> //std::bind
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class MySQLConnPool :public Singleton<MySQLConnPool>{
+class MySQLConnPool : public Singleton<MySQLConnPool>{
 private:
     MySQLConnPool();
     bool loadConfigFile();
